@@ -72,7 +72,7 @@
             android:id="@+id/schedule_listView"
             android:layout_below="@+id/textview_schedule"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="300dp"
             android:layout_alignParentStart="true"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
