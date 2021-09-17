@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@android:color/transparent"
+    android:layout_gravity="center"
+    tools:context=".Add_New_class_HomeTutor">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="80dp"
+        android:background="@drawable/classstroke"
+        android:orientation="vertical"
+        android:gravity = 'center_horizontal'
+        android:padding="26dp">
+        <EditText
+            android:id="@+id/coursename_hometutor_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/roundededittext"
+            android:cursorVisible="true"
+            android:gravity="center"
+
+            android:hint="Course Name" />
+
+        <EditText
+            android:id="@+id/class_hometutor_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/roundededittext"
+            android:cursorVisible="true"
+            android:gravity="center"
+
+            android:hint="Class" />
+
+     <LinearLayout
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:orientation="horizontal">
+
+         <Button
+             android:layout_width="150dp"
+             android:elevation="0dp"
+             android:layout_height="wrap_content"
+             android:layout_below="@id/section_edittext"
+             android:layout_marginTop="15dp"
+             android:background="@drawable/roundedbutton"
+             android:gravity="center"
+             android:padding="10dp"
+             android:id= "@+id/hometutor_class_add_button"
+             android:text="Add" />
+         <Button
+             android:layout_width="150dp"
+             android:elevation="0dp"
+             android:layout_height="wrap_content"
+             android:layout_below="@id/section_edittext"
+             android:layout_marginTop="15dp"
+             android:background="@drawable/roundedbutton"
+             android:gravity="center"
+             android:padding="10dp"
+             android:layout_marginStart="30dp"
+             android:id= "@+id/hometutor_class_cancel_button"
+             android:text="Cancel" />
+
+
+     </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>

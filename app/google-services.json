@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1074227662938",
+    "project_id": "chalkboard-copy",
+    "storage_bucket": "chalkboard-copy.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1074227662938:android:b985ea9065a0ef02c58863",
+        "android_client_info": {
+          "package_name": "com.example.chalkboard_copy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1074227662938-f8qntntva3hr0svt00gt9f4vajquotpq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFu1QSpu2qkg4hc1BuenFWuXbqTT95-4M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1074227662938-f8qntntva3hr0svt00gt9f4vajquotpq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

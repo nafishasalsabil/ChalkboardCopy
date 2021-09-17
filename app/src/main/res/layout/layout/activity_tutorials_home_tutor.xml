@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Tutorials">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_tutorials_ht"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:elevation="0dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+
+        />
+
+    <TextView
+        android:id="@+id/tutorialLink_ht"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:fontFamily="@font/exoregular"
+        android:includeFontPadding="false"
+        android:padding="5dp"
+        android:text="  Tutorial links"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:layout_below="@+id/toolbar_tutorials_ht"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/tutorialsRecyclerView_ht"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_marginEnd="2dp"
+        android:clipToPadding="false"
+        android:visibility="visible"
+        android:layout_below="@+id/tutorialLink_ht"
+        />
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addlinks_ht"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="28dp"
+        android:layout_marginRight="18dp"
+        android:layout_marginBottom="53dp"
+        android:backgroundTint="#3c1414"
+        android:padding="10dp"
+        android:src="@drawable/ic_add_black_24dp" />
+
+
+</RelativeLayout>

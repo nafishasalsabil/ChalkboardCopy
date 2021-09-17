@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#9BCFC5"
+    tools:context=".ChoiceActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="167dp"
+        android:layout_marginEnd="18dp"
+        android:fontFamily="@font/moonbold"
+        android:text="How do you want to continue?"
+        android:textColor="@android:color/white"
+        android:textSize="20dp" />
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/tutor"
+        android:layout_width="140dp"
+        android:layout_height="110dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="308dp"
+        android:layout_marginEnd="44dp"
+        android:background="@drawable/prof_button"
+        android:drawableTop="@drawable/ic_person"
+        android:fontFamily="@font/exoregular"
+        android:padding="10dp"
+        android:stateListAnimator="@null"
+        android:text="Home tutor"
+        android:textSize="10dp"
+        android:textColor="@android:color/black"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/proft"
+        android:layout_width="140dp"
+        android:layout_height="110dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="46dp"
+        android:layout_marginTop="308dp"
+        android:background="@drawable/prof_button"
+        android:drawableTop="@drawable/ic_man"
+        android:fontFamily="@font/exoregular"
+        android:padding="10dp"
+        android:stateListAnimator="@null"
+        android:text="Professional teacher"
+        android:textColor="@android:color/black"
+        android:textSize="10dp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/both_prof_ht"
+        android:layout_width="140dp"
+        android:layout_height="110dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="137dp"
+        android:layout_marginTop="447dp"
+        android:background="@drawable/prof_button"
+        android:drawableTop="@drawable/ic_all_inclusive"
+        android:fontFamily="@font/exoregular"
+        android:padding="10dp"
+        android:stateListAnimator="@null"
+        android:text="Both"
+        android:textSize="10dp"
+        android:textColor="@android:color/black"
+        android:textStyle="bold" />
+
+
+</RelativeLayout>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_marginBottom="4dp"
+    android:layout_margin = "6dp"
+    app:cardPreventCornerOverlap="false"
+    app:cardCornerRadius="6dp"
+    android:id="@+id/classcard"
+    android:backgroundTint="#AFBAAC"
+    android:layout_height="150dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+        <View
+            android:layout_width="6dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:background="#929C8E"
+            />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal"
+            android:layout_marginTop="40dp"
+            android:layout_marginStart="15dp"
+          >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/exoregular"
+                android:text="Quiz title : "
+                android:layout_gravity="center_vertical"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="0dp"
+                android:textStyle="bold"
+                android:textSize="20sp" />
+
+
+            <TextView
+                android:id="@+id/quiztitle_ht"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/exoregular"
+                android:text=" Quiz title"
+                android:layout_gravity="center_vertical"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="0dp"
+                android:textStyle="bold"
+                android:textSize="20sp" />
+  </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="15dp"
+                android:orientation="horizontal"
+               >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/exoregular"
+                    android:text="Marks : "
+                    android:layout_gravity="center_vertical"
+                    android:textColor="@android:color/white"
+                    android:layout_marginTop="0dp"
+                    android:textStyle="bold"
+                    android:textSize="20sp" />
+
+
+                <TextView
+                    android:id="@+id/quiz_marks_total_ht"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/exoregular"
+                    android:text=" marks"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="@android:color/white"
+                    android:layout_marginTop="0dp"
+                    android:textStyle="bold"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardview"
+    android:layout_width="match_parent"
+    android:layout_height="104dp"
+    android:layout_marginLeft="6dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginRight="6dp"
+    android:backgroundTint="#ffffff"
+    android:orientation="vertical"
+    app:cardCornerRadius="4dp"
+    app:cardElevation="5dp"
+    app:cardPreventCornerOverlap="false"
+    app:cardUseCompatPadding="false">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="0dp">
+
+        <View
+            android:id="@+id/student_view"
+            android:layout_width="5dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:background="#8D8177" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="18dp">
+
+            <TextView
+                android:id="@+id/roll_ht"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:fontFamily="@font/exoregular"
+                android:inputType="number"
+                android:text="01"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/name_ht"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:fontFamily="@font/exoregular"
+                android:text="name"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <RadioGroup
+            android:id="@+id/radioGroup_status_ht"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <RadioButton
+                android:id="@+id/radioButton_present_ht"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:checked="false"
+                android:drawableEnd="@drawable/custom_radio_btn_p"
+                android:padding="0dp"/>
+
+            <RadioButton
+                android:id="@+id/radioButton_abs_ht"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:checked="false"
+                android:drawableEnd="@drawable/custom_radio_btn_a"
+                />
+
+            <RadioButton
+                android:id="@+id/radioButton_late_ht"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:checked="false"
+                android:drawableEnd="@drawable/custom_radio_btn_l"
+                />
+        </RadioGroup>
+        <!--        <ImageView-->
+        <!--            android:id="@+id/present_status"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:clickable="true"-->
+        <!--            android:layout_marginLeft="210dp"-->
+        <!--            android:src="@drawable/p"-->
+        <!--            android:layout_marginTop="-0dp"-->
+        <!--            android:layout_marginBottom="20dp"-->
+        <!--            android:layout_alignParentTop="true"/>-->
+        <!--        <ImageView-->
+        <!--            android:id="@+id/absent_status"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:clickable="true"-->
+        <!--            android:layout_marginLeft="270dp"-->
+        <!--            android:src="@drawable/a"-->
+        <!--            android:layout_marginTop="-0dp"-->
+        <!--            android:layout_marginBottom="20dp"-->
+        <!--            android:layout_alignParentTop="true"/>-->
+        <!--        <ImageView-->
+        <!--            android:id="@+id/late_status"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:clickable="true"-->
+        <!--            android:layout_marginLeft="330dp"-->
+        <!--            android:src="@drawable/l"-->
+        <!--            android:layout_marginTop="-0dp"-->
+        <!--            android:layout_marginBottom="20dp"-->
+        <!--            android:layout_alignParentTop="true"/>-->
+
+
+    </RelativeLayout>
+
+
+</androidx.cardview.widget.CardView>

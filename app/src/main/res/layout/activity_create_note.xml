@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/c5"
+    tools:context=".CreateNoteActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="40dp"
+        android:clipToPadding="false"
+        android:paddingBottom="10dp">
+
+        <LinearLayout
+            android:id="@+id/c_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:animateLayoutChanges="true">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/ImageBack"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/ic_back"
+                    android:tint="@color/c6"
+                 />
+
+                <ImageView
+                    android:id="@+id/ImageSave"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="-30dp"
+                    android:layout_marginStart="356dp"
+                    android:background="@drawable/background_done_button"
+                    android:contentDescription="@string/app_name"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_done"
+                    android:tint="@color/c6"
+                    android:clickable="true" />
+
+
+
+            </LinearLayout>
+
+
+
+
+
+
+            <EditText
+                android:id="@+id/inputNoteTitle"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="12dp"
+                android:background="@null"
+                android:fontFamily="@font/exoregular"
+                android:hint="Note Title"
+                android:imeOptions="actionDone"
+                android:importantForAutofill="no"
+                android:includeFontPadding="false"
+                android:inputType="text"
+                android:textColor="@android:color/black"
+                android:textColorHint="@color/c6"
+                android:textSize="25dp"
+                app:layout_constraintTop_toBottomOf="@id/ImageBack"
+
+                />
+
+            <TextView
+                android:id="@+id/textDateTime"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="12dp"
+                android:fontFamily="@font/exoregular"
+                android:padding="10dp"
+                android:text="date"
+                android:textColor="@color/c6"
+
+                android:textSize="15sp"
+                app:layout_constraintEnd_toEndOf="@id/inputNoteTitle"
+                app:layout_constraintStart_toStartOf="@id/inputNoteTitle"
+                app:layout_constraintTop_toBottomOf="@id/inputNoteTitle" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <View
+                    android:id="@+id/viewSubtitleIndicator"
+                    android:layout_width="5dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="2dp"
+                    android:background="@drawable/background_subtitle_indicator"
+                    app:layout_constraintBottom_toBottomOf="@id/inputNoteSubtitle"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/inputNoteSubtitle" />
+
+
+                <EditText
+                    android:id="@+id/inputNoteSubtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="12dp"
+                    android:background="@null"
+                    android:fontFamily="@font/exoregular"
+                    android:hint="@string/note_subtitle"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@color/c6"
+                    android:textSize="18dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/viewSubtitleIndicator"
+                    app:layout_constraintTop_toBottomOf="@id/textDateTime"
+
+                    />
+            </LinearLayout>
+
+
+
+            <TextView
+                android:id="@+id/url_textview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/c6"
+                android:fontFamily="@font/exoregular"
+                android:textSize="15sp"
+                android:padding="10dp"
+                android:text="url"
+                android:visibility="gone"
+                android:autoLink="web"
+                android:clickable="true"
+                />
+
+
+            <EditText
+                android:id="@+id/inputNote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:background="@null"
+                android:fontFamily="@font/exoregular"
+                android:gravity="top"
+                android:hint="@string/type_note_here"
+                android:importantForAutofill="no"
+                android:includeFontPadding="false"
+                android:inputType="textMultiLine"
+                android:minHeight="10dp"
+                android:textColor="@android:color/black"
+                android:textColorHint="@color/c6"
+                android:textSize="17dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/inputNoteSubtitle" />
+
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+    <ImageView
+        android:id="@+id/image_url"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="690dp"
+        android:background="@drawable/ic_web_link"
+        android:clickable="true"
+        android:contentDescription="@string/app_name"
+        android:padding="4dp"
+        android:tint="@color/c6"
+        android:layout_marginStart="330dp"
+
+        />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

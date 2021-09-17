@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:padding="12dp">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/chat_profile_pic"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_profile"
+            android:visibility="gone"/>
+        <TextView
+            android:id="@+id/showmessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_right_chat"
+            android:layout_marginLeft="5dp"
+            android:text="message"
+            android:padding="8dp"
+            android:layout_alignParentEnd="true"
+            android:textColor="@android:color/white"
+            android:fontFamily="@font/exoregular"
+            android:textSize="18sp"
+            />
+        <TextView
+            android:id="@+id/txt_seen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="seen"
+            android:fontFamily="@font/exoregular"
+            android:layout_below="@id/showmessage"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"/>
+    </RelativeLayout>
+
+</RelativeLayout>

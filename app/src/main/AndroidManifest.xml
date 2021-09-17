@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.chalkboard_copy">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
+        android:immersive="true">
+
+
+        <activity android:name=".EditNoteHT"></activity>
+        <activity android:name=".MonthlyIncomeHomeTutor" />
+        <activity android:name=".ClassPerformanceHT" />
+        <activity android:name=".QuizMarksRecordHT" />
+        <activity android:name=".QuizHomeTutor" />
+        <activity android:name=".MarksHomeTutor" />
+        <activity android:name=".MessageActivityHomeTutor" />
+        <activity android:name=".StudentInfoHomeTutor" />
+        <activity android:name=".ResultsHomeTutor" />
+        <activity android:name=".ExamQuestionHomeTutor" />
+        <activity android:name=".CreateNoteActivityHomeTutor" />
+        <activity android:name=".TutorialsHomeTutor" />
+        <activity android:name=".PDFsHomeTutor" />
+        <activity android:name=".All_Students_All_Records_Home_Tutor" />
+        <activity android:name=".StudentListHometutor" />
+        <activity android:name=".CGPACalculator" />
+        <activity android:name=".AddReminder" />
+        <activity android:name=".AddPostActivity" />
+        <activity android:name=".layout_add_tutorial_links_hometutor" />
+        <activity android:name=".CreateNoteHometutor" />
+        <activity android:name=".Add_new_students_hometutor" />
+        <activity android:name=".MyNotes_hometutor" />
+        <activity android:name=".Attendance_record_hometutor" />
+        <activity android:name=".Attendance_activity_hometutor" />
+        <activity android:name=".Attendance_hometutor" />
+        <activity android:name=".Materials_hometutor" />
+        <activity android:name=".Inside_class_home_tutor" />
+        <activity android:name=".Batch_inside_courses_home_tutor" />
+        <activity android:name=".Add_New_class_HomeTutor" />
+        <activity android:name=".Tutorials" />
+        <activity android:name=".EditNoteActivity" />
+        <activity android:name=".ClassPerformance" />
+        <activity android:name=".MainActivity_HomeTutor" />
+
+        <service
+            android:name=".Notifications.MyFirebaseIdService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".Notifications.MyFirebaseMessagingService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity android:name=".UserProfile" />
+        <activity android:name=".UserProfileHomeTutor" />
+        <activity android:name=".MessageActivity" />
+        <activity android:name=".StudentList" />
+        <activity android:name=".QuizMarksRecord" />
+        <activity android:name=".QuizMarks" />
+        <activity android:name=".StudentInfo" />
+        <activity android:name=".All_Students_All_Attendance_Record" />
+        <activity android:name=".Attendance_record" />
+        <activity android:name=".Sections_Inside_Courses" />
+        <activity android:name=".Results" />
+        <activity
+            android:name=".CreateNoteActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".MyNotes"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".Exam_Questions" />
+        <activity android:name=".PDFs" />
+        <activity android:name=".Materials" />
+        <activity android:name=".AddNewStudents" />
+        <activity android:name=".Attendance_activity" />
+        <activity android:name=".AddNewClassActivity" />
+        <activity android:name=".InsideClassActivity" />
+        <activity android:name=".AddClassesActivity" />
+        <activity android:name=".Update_profile" />
+        <activity android:name=".Update_profile_homeTutor" />
+        <activity android:name=".ChoiceActivity" />
+        <activity android:name=".Student_Attendance" />
+        <activity android:name=".Attendance" />
+        <activity
+            android:name=".Features"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ForgotPassActivity" />
+        <activity android:name=".SignupActivity" />
+        <activity
+            android:name=".Main2Activity"
+            android:screenOrientation="portrait" />
+
+
+
+
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

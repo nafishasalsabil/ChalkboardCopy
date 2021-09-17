@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_marginBottom="4dp"
+    android:layout_margin = "6dp"
+    app:cardPreventCornerOverlap="false"
+    app:cardCornerRadius="6dp"
+    android:id="@+id/classcard"
+    android:backgroundTint="#AEC8CE"
+    android:layout_height="150dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+        <View
+            android:layout_width="6dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:background="#9FB9BF"
+            />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="126dp"
+        android:layout_centerVertical="true"
+        android:layout_margin="6dp"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/exoregular"
+            android:text="Section : "
+            android:layout_gravity="center_vertical"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="0dp"
+            android:textStyle="bold"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/sectiontitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/exoregular"
+            android:text="Section title"
+            android:layout_gravity="center_vertical"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="0dp"
+            android:textStyle="bold"
+            android:textSize="20sp" />
+
+
+
+
+
+
+    </LinearLayout>
+</RelativeLayout>
+
+</androidx.cardview.widget.CardView>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MyNotes_hometutor"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/textMyNotes_hometutor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20sp"
+        android:layout_marginEnd="12dp"
+        android:fontFamily="@font/exoregular"
+        android:includeFontPadding="false"
+        android:padding="5dp"
+        android:text="My Notes"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/LayoutSearch_hometutor_ht"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textMyNotes_hometutor"
+        android:background="@drawable/background_search"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:padding="8dp">
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_search"
+            android:padding="5dp"
+
+            />
+
+        <EditText
+            android:id="@+id/inputSearch_hometutor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/black"
+            android:layout_marginStart="13dp"
+            android:background="@null"
+            android:fontFamily="@font/exoregular"
+            android:hint="Search notes"
+            android:imeOptions="actionDone"
+            android:importantForAutofill="no"
+            android:includeFontPadding="false"
+            android:inputType="text"
+            android:textColor="@android:color/black"
+            android:textColorHint="@color/c5"
+            android:textSize="13dp"
+
+            />
+
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/notesRecyclerView_ht"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_marginEnd="2dp"
+        android:clipToPadding="false"
+        android:visibility="visible"
+        android:layout_below="@+id/LayoutSearch_hometutor_ht"
+        />
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addnotes_hometutor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="28dp"
+        android:layout_marginRight="18dp"
+        android:layout_marginBottom="53dp"
+        android:backgroundTint="#3c1414"
+        android:padding="10dp"
+        android:src="@drawable/ic_add_black_24dp" />
+
+</RelativeLayout>

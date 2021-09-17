@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="400dp"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@android:color/transparent"
+    android:layout_gravity="center"
+    tools:context=".Batch_inside_courses_home_tutor">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="80dp"
+        android:background="@drawable/classstroke"
+        android:orientation="vertical"
+        android:gravity = 'center_horizontal'
+        android:padding="26dp">
+
+        <EditText
+            android:id="@+id/batch_name_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/roundededittext"
+            android:cursorVisible="true"
+            android:gravity="center"
+
+            android:hint="Batch Name" />
+        <EditText
+            android:id="@+id/batch_no_of_days_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/roundededittext"
+            android:cursorVisible="true"
+            android:gravity="center"
+
+            android:hint="Number of Days" />
+
+        <EditText
+            android:id="@+id/batch_days_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/roundededittext"
+            android:cursorVisible="true"
+            android:gravity="center"
+
+            android:hint="Days" />
+
+
+
+        <EditText
+            android:id="@+id/batch_time_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/roundededittext"
+            android:cursorVisible="true"
+            android:gravity="center"
+
+            android:hint="Batch Time" />
+
+
+
+        <EditText
+            android:id="@+id/payment_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/roundededittext"
+            android:cursorVisible="true"
+            android:gravity="center"
+
+            android:hint="Payment for per student" />
+
+
+        <Button
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/batch_name_edittext"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/roundedbutton"
+            android:gravity="center"
+            android:padding="10dp"
+            android:id= "@+id/batch_add_button"
+            android:text="Add" />
+
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/ic_teamwork"
+
+        />
+
+
+</RelativeLayout>

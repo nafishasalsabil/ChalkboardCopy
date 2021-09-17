@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="400dp"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@android:color/transparent"
+    android:layout_gravity="center"
+    tools:context=".Attendance_activity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/classstroke"
+        android:orientation="vertical"
+        android:gravity = 'center_horizontal'
+        android:padding="26dp">
+
+        <TextView
+            android:padding="10dp"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You cannot add students once you start taking attendance. Do you want to add more students?"
+            android:textColor="@android:color/black"
+            android:fontFamily="@font/exoregular"
+            android:layout_gravity="center"
+            android:gravity="center"
+            />
+
+
+        <Button
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-90dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/roundedbutton"
+            android:gravity="center"
+            android:padding="10dp"
+            android:id= "@+id/add_more"
+
+            android:text="Add more " />
+
+        <Button
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="90dp"
+            android:layout_marginTop="-48dp"
+            android:background="@drawable/roundedbutton"
+            android:id= "@+id/done_done"
+
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="done" />
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="35dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ic_alert_red"
+        android:layout_marginStart="-230dp"
+        />
+
+
+</RelativeLayout>

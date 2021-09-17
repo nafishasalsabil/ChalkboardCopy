@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    tools:context=".Attendance_activity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_list_ht"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:elevation="5dp"
+        android:theme="@style/Base.Widget.AppCompat.Light.PopupMenu"
+
+        />
+
+
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/layout1">
+
+
+        <!--            tools:listitem="@layout/student_item"-->
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/students_list_recycler_view_ht"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+        <TextView
+            android:id="@+id/tv01_ht"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="-250dp"
+            android:fontFamily="@font/exoregular"
+            android:text="Haven't added students yet?"
+            android:textColor="@android:color/black"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv02_ht"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="-200dp"
+            android:fontFamily="@font/exoregular"
+            android:text="Students you add for taking attendance will appear here."
+            android:textColor="@android:color/darker_gray"
+            android:textSize="8sp"
+            android:textStyle="normal" />
+
+
+        <Button
+            android:id="@+id/b_ht"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="logout"
+            android:visibility="invisible"
+            />
+
+        <Button
+            android:id="@+id/file_choser_ht"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/done_button_ht"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:text="Done"
+            android:fontFamily="@font/exoregular"
+            android:background="#8CBEB5"
+            android:textColor="@android:color/white"/>
+
+        <com.getbase.floatingactionbutton.FloatingActionsMenu
+            android:id="@+id/main_fab_ht"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            app:layout_anchorGravity="center_vertical|right"
+            app:fab_addButtonColorNormal="#3c1414"
+            app:fab_addButtonColorPressed="#3c1414"
+
+            app:fab_addButtonPlusIconColor="#ffffff"
+            app:fab_expandDirection="up"
+            app:fab_labelStyle="@style/menu_labels_style"
+            android:layout_marginBottom="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp">
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/add_student_fab_ht"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fab_icon="@drawable/ic_group_add_black_24dp"
+                app:fab_colorNormal="#3c1414"
+                app:fab_title="Add student"
+                app:fab_size="mini"
+                app:fab_colorPressed="#3c1414"
+                />
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/take_attendance_fab_ht"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fab_icon="@drawable/ic_person_outline_black_24dp"
+                app:fab_colorNormal="#3c1414"
+                app:fab_title="Take attendance"
+                app:fab_size="mini"
+                app:fab_colorPressed="#3c1414"
+                />
+        </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+        <com.getbase.floatingactionbutton.FloatingActionsMenu
+            android:id="@+id/add_new_student_fab_menu_ht"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            app:layout_anchorGravity="center_vertical|right"
+            app:fab_addButtonColorNormal="#3c1414"
+            app:fab_addButtonColorPressed="#3c1414"
+
+            app:fab_addButtonPlusIconColor="#ffffff"
+            app:fab_expandDirection="up"
+            app:fab_labelStyle="@style/menu_labels_style"
+
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginVertical="50dp"
+            >
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/add_student_manually_fab_ht"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fab_icon="@drawable/ic_group_add_black_24dp"
+                app:fab_colorNormal="#3c1414"
+                app:fab_title="Add student manually"
+                app:fab_size="mini"
+                app:fab_colorPressed="#3c1414"
+                />
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/import_from_excel_ht"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fab_icon="@drawable/ic_baseline_file_copy_24"
+                app:fab_colorNormal="#3c1414"
+                app:fab_title="Import from excel sheets"
+                app:fab_size="mini"
+                app:fab_colorPressed="#3c1414"
+                />
+        </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>
+
+

@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    tools:context=".Attendance_activity_hometutor">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_attendance_ht"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:elevation="5dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+
+        />
+
+
+    <LinearLayout
+        android:id="@+id/layout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/white"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+
+        <RelativeLayout
+            android:id="@+id/present_layout_ht"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/present_cardview_bg"
+            android:padding="0dp"
+            android:fitsSystemWindows="true">
+
+
+            <TextView
+                android:id="@+id/present_student_count_ht"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="48dp"
+                android:layout_marginTop="35dp"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="0"
+                android:textColor="@android:color/black"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="30dp"
+                android:fontFamily="@font/exoregular"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="Present" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/absent_layout_ht"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_marginLeft="10dp"
+            android:padding="0dp"
+            android:background="@drawable/absent_cardview_bg"
+            >
+
+
+            <TextView
+                android:id="@+id/absent_student_count_ht"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="48dp"
+                android:layout_marginTop="35dp"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="0"
+                android:textColor="@android:color/black"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="30dp"
+                android:fontFamily="@font/exoregular"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="Absent" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/late_layout_ht"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_marginLeft="10dp"
+            android:padding="0dp"
+            android:background="@drawable/late_cardview_bg"
+            >
+
+
+
+            <TextView
+                android:id="@+id/late_student_count_ht"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="48dp"
+                android:layout_marginTop="35dp"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="0"
+                android:textColor="@android:color/black"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="40dp"
+                android:fontFamily="@font/exoregular"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="Late" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/layout1">
+
+
+        <!--            tools:listitem="@layout/student_item"-->
+
+
+        <ListView
+            android:id="@+id/students_recycler_view_ht"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+        <TextView
+            android:id="@+id/tv1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="-250dp"
+            android:fontFamily="@font/exoregular"
+            android:text="Haven't added students yet?"
+            android:textColor="@android:color/black"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="-200dp"
+            android:fontFamily="@font/exoregular"
+            android:text="Students you add for taking attendance will appear here."
+            android:textColor="@android:color/darker_gray"
+            android:textSize="8sp"
+            android:textStyle="normal" />
+
+
+        <Button
+            android:id="@+id/b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="logout"
+            android:visibility="invisible"
+            />
+
+        <Button
+            android:id="@+id/file_choser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+
+
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/attendance_done_fab_ht"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#8CBEB5"
+            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_gravity="bottom|right"
+            android:src="@drawable/ic_baseline_done_24"
+            />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</LinearLayout>

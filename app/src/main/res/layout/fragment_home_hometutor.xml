@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:id="@+id/ll1"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_margin="6dp"
+        android:layout_height="110dp">
+        <View
+            android:layout_width="6dp"
+            android:layout_height="match_parent"
+            android:background="#9BCFC5"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Today"
+                android:textColor="@android:color/black"
+                android:fontFamily="@font/exoregular"
+                android:textSize="30sp"
+                android:layout_marginStart="5dp"/>
+            <TextView
+                android:id="@+id/day_name_ht"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Day Name"
+                android:textColor="@android:color/black"
+                android:fontFamily="@font/exoregular"
+                android:textSize="20sp"
+                android:layout_marginStart="5dp"/>
+            <TextView
+                android:id="@+id/date_today_ht"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Date"
+                android:textColor="@android:color/black"
+                android:fontFamily="@font/exoregular"
+                android:textSize="15sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="5dp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll2"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_margin="6dp"
+        android:layout_below="@id/ll1"
+        android:layout_height="180dp">
+        <View
+            android:layout_width="6dp"
+            android:layout_height="match_parent"
+            android:background="#9BCFC5"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Expected Income"
+                    android:textColor="@android:color/black"
+                    android:fontFamily="@font/exoregular"
+                    android:textSize="20sp"
+                    android:layout_marginStart="5dp"/>
+                <TextView
+                    android:id="@+id/expected_income_ht"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Expected Income"
+                    android:textColor="@android:color/black"
+                    android:fontFamily="@font/exoregular"
+                    android:textSize="20sp"
+                    android:layout_marginStart="65dp"/>
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Recieved Income"
+                    android:textColor="@android:color/black"
+                    android:fontFamily="@font/exoregular"
+                    android:textSize="15sp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginStart="5dp"/>
+
+                <TextView
+                    android:id="@+id/recieved_money"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="@android:color/black"
+                    android:fontFamily="@font/exoregular"
+                    android:textSize="15sp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginStart="120dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Remaining Income"
+                    android:textColor="@android:color/black"
+                    android:fontFamily="@font/exoregular"
+                    android:textSize="15sp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginStart="5dp"/>
+
+                <TextView
+                    android:id="@+id/remaining_money"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="@android:color/black"
+                    android:fontFamily="@font/exoregular"
+                    android:textSize="15sp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginStart="110dp"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total Students"
+                    android:textColor="@android:color/black"
+                    android:fontFamily="@font/exoregular"
+                    android:textSize="15sp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginStart="5dp"/>
+
+                <TextView
+                    android:id="@+id/total_students"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="@android:color/black"
+                    android:fontFamily="@font/exoregular"
+                    android:textSize="15sp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginStart="135dp"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Fee Paid Students"
+                    android:textColor="@android:color/black"
+                    android:fontFamily="@font/exoregular"
+                    android:textSize="15sp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginStart="5dp"/>
+
+                <TextView
+                    android:id="@+id/paid_stu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/black"
+                    android:text="0"
+                    android:fontFamily="@font/exoregular"
+                    android:textSize="15sp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginStart="115dp"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Fee Remaining Students"
+                    android:textColor="@android:color/black"
+                    android:fontFamily="@font/exoregular"
+                    android:textSize="15sp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginStart="5dp"/>
+
+                <TextView
+                    android:id="@+id/rem_stu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="@android:color/black"
+                    android:fontFamily="@font/exoregular"
+                    android:textSize="15sp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginStart="70dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/home_recycler_view_ht"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/ll2"
+        />
+
+
+
+</RelativeLayout>

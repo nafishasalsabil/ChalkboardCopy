@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_gravity="center"
+    android:layout_margin="10dp"
+    android:padding="5dp"
+    android:orientation="vertical"
+    android:background="@drawable/background_dialog">
+<!-- />/   android:background="@drawable/background_dialog">-->
+
+
+    <LinearLayout
+        android:id="@+id/ll1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/imageAddLink"
+            android:layout_width="25sp"
+            android:layout_height="25sp"
+            android:layout_marginStart="10sp"
+            android:layout_marginTop="4sp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_connection"
+            android:tint="@android:color/white"
+
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:fontFamily="@font/exoregular"
+            android:text="Add Links"
+            android:layout_marginTop="5dp"
+            android:textColor="@android:color/white"
+            android:textSize="14dp"
+             />
+
+    </LinearLayout>
+    <EditText
+        android:id="@+id/link_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Give your saved link a name!"
+        android:gravity="center_vertical"
+        android:layout_marginTop="10dp"
+        android:padding="8dp"
+        android:textSize="13sp"
+        android:textColor="@android:color/white"
+        android:textColorHint="#ffffff"
+        android:fontFamily="@font/exoregular"
+        android:background="@drawable/linkedittext"
+
+        />
+    <EditText
+        android:id="@+id/link_to_add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter the link"
+        android:textSize="13sp"
+        android:autoLink="web"
+        android:inputType="textWebEditText"
+        android:linksClickable="true"
+        android:gravity="center_vertical"
+        android:layout_marginTop="10dp"
+        android:padding="8dp"
+        android:textColor="@android:color/white"
+        android:textColorHint="#ffffff"
+        android:fontFamily="@font/exoregular"
+        android:background="@drawable/linkedittext"
+
+        />
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginTop="5dp">
+
+    <Button
+        android:id="@+id/textAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="@font/exoregular"
+        android:includeFontPadding="false"
+        android:padding="6dp"
+        android:text="@string/add"
+        android:layout_marginStart="170dp"
+        android:textColor="@android:color/white"
+        android:textSize="20dp"
+        android:background="@android:color/transparent"
+
+        />
+
+
+    <Button
+        android:id="@+id/textCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="@font/exoregular"
+        android:includeFontPadding="false"
+        android:padding="6dp"
+        android:text="@string/cancel"
+        android:textColor="@android:color/white"
+        android:textSize="20dp"
+        android:background="@android:color/transparent"
+
+        />
+
+</LinearLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_marginBottom="4dp"
+    android:layout_margin = "6dp"
+    app:cardPreventCornerOverlap="false"
+    app:cardCornerRadius="6dp"
+    android:background="#DAD5D2"
+    android:clickable="true"
+    android:id="@+id/attendancerecordcard"
+    android:layout_height="150dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <View
+            android:layout_width="7dp"
+            android:layout_height="match_parent"
+            android:background="#97C3C3"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="126dp"
+        android:layout_centerVertical="true"
+        android:layout_margin="6dp"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/lecture_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/exoregular"
+            android:text="Lecture title"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:layout_marginTop="20dp"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/lecture_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/exoregular"
+            android:padding="6dp"
+            android:text="Lecture date"
+            android:textStyle="bold"
+            android:textColor="#878787"
+            android:textSize="15sp" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+        </RelativeLayout>
+
+
+
+    </LinearLayout>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

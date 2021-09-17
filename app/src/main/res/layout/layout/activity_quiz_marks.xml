@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools ="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical"
+    android:id="@+id/hellohi"
+
+
+    >
+
+    <!--  <include
+          layout="@layout/toolbar"
+          android:id="@+id/classes_toolbar"
+          />
+    -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_quiz"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:elevation="5dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/quiz_recyclerview"
+        android:layout_below="@id/toolbar_quiz"
+        />
+
+    <TextView
+        android:id = "@+id/nqt1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="307dp"
+        android:fontFamily = "@font/exoregular"
+        android:textColor = "#000000"
+        android:textStyle = "bold"
+        android:text="No quizes taken yet!"
+        android:textSize="20sp" />
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_quiz_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="28dp"
+        android:layout_marginRight="18dp"
+        android:layout_marginBottom="53dp"
+        android:backgroundTint="#3c1414"
+        android:padding="10dp"
+        android:src="@drawable/ic_add_black_24dp" />
+</RelativeLayout>
+    <!-- <com.google.android.material.navigation.NavigationView
+         android:layout_gravity="start"
+         android:fitsSystemWindows="true"
+         android:layout_width="wrap_content"
+         android:layout_height="match_parent"
+         app:headerLayout="@layout/header"
+         app:menu="@menu/menu"
+         android:id="@+id/navigationView">
+     </com.google.android.material.navigation.NavigationView>
+ -->
+

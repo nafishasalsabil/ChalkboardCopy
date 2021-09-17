@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="350dp"
+    android:layout_height="300dp"
+    android:orientation="vertical"
+    android:layout_marginStart="5dp"
+    android:background="@drawable/classstroke"
+   >
+
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_student_hat"
+        android:layout_marginTop="20dp"/>
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="student name"
+        android:padding="5dp"
+        android:fontFamily="@font/exoregular"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        android:layout_gravity="center"
+        android:gravity="center"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="10dp"
+        android:orientation="horizontal"
+      >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:text="Performance : "
+            android:padding="5dp"
+            android:fontFamily="@font/exoregular"
+            android:layout_marginTop="10dp"
+            />
+        <TextView
+            android:id="@+id/percentage"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#9BCFC5"
+            android:textColor="@android:color/white"
+            android:text="percentage"
+            android:textSize="15sp"
+            android:fontFamily="@font/exoregular"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="10dp"
+
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:text="Payment for this month : "
+            android:padding="5dp"
+            android:fontFamily="@font/exoregular"
+            android:layout_marginTop="10dp"
+            />
+        <TextView
+            android:id="@+id/payment"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#9BCFC5"
+            android:text="not given"
+            android:fontFamily="@font/exoregular"
+            android:textSize="15sp"
+            android:textColor="@android:color/white"
+            />
+
+    </LinearLayout>
+    </LinearLayout>

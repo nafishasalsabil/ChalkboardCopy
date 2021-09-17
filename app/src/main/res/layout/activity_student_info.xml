@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools ="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical"
+    android:id="@+id/hellohi"
+    >
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_s_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:elevation="5dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/student_info_recyclerview"
+        android:layout_below="@id/toolbar_s_info"
+        />
+
+    <TextView
+        android:id = "@+id/no_info_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="307dp"
+        android:fontFamily = "@font/moonbold"
+        android:textColor = "#000000"
+        android:textStyle = "bold"
+        android:text="SEE STUDENT INFORMATION HERE!"
+        android:textSize="20sp" />
+
+
+
+</RelativeLayout>
+    <!-- <com.google.android.material.navigation.NavigationView
+         android:layout_gravity="start"
+         android:fitsSystemWindows="true"
+         android:layout_width="wrap_content"
+         android:layout_height="match_parent"
+         app:headerLayout="@layout/header"
+         app:menu="@menu/menu"
+         android:id="@+id/navigationView">
+     </com.google.android.material.navigation.NavigationView>
+ -->
+

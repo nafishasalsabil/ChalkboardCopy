@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#9BCFC5"
+    tools:context=".AddNewClassActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="128dp"
+        android:fontFamily="@font/moonbold"
+        android:text="Add a new course"
+        android:textSize="30sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="200dp"
+        android:padding="10dp"
+        android:text="Course Title    : "
+        android:textColor="@android:color/white"
+        android:textStyle = "bold"
+        android:fontFamily="@font/exoregular"
+        />
+
+    <EditText
+        android:id="@+id/coursetitle"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="190dp"
+            android:layout_marginEnd="47dp"
+            android:backgroundTint="@android:color/white"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="250dp"
+        android:padding="10dp"
+        android:text="Course No.      : "
+        android:fontFamily="@font/exoregular"
+        android:textColor="@android:color/white" />
+
+    <EditText
+        android:id="@+id/courseno"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="240dp"
+        android:layout_marginEnd="47dp"
+        android:backgroundTint="@android:color/white"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="300dp"
+        android:padding="10dp"
+        android:fontFamily="@font/exoregular"
+        android:text="Semester         : "
+        android:textColor="@android:color/white" />
+
+    <EditText
+        android:id="@+id/semester"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="290dp"
+        android:layout_marginEnd="47dp"
+        android:backgroundTint="@android:color/white"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="350dp"
+        android:padding="10dp"
+        android:text="Credits             : "
+        android:fontFamily="@font/exoregular"
+        android:textColor="@android:color/white" />
+
+    <EditText
+        android:id="@+id/credits"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="340dp"
+        android:inputType="numberDecimal"
+        android:layout_marginEnd="47dp"
+        android:backgroundTint="@android:color/white"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="390dp"
+        android:padding="10dp"
+        android:fontFamily="@font/exoregular"
+        android:text="What kind of course is this?"
+        android:textColor="@android:color/white" />
+
+    <RadioGroup
+        android:id="@+id/radiogroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="420dp"
+        android:layout_marginLeft="153dp"
+        android:padding="10dp"
+        android:orientation="horizontal">
+        <RadioButton
+            android:id="@+id/theory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Theory"
+            android:onClick="radiobutton"
+            android:fontFamily="@font/exoregular"
+            android:textColor="@android:color/white"
+            android:buttonTint="@android:color/darker_gray"
+            />
+        <RadioButton
+            android:id="@+id/lab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lab"
+            android:onClick="radiobutton"
+            android:fontFamily="@font/exoregular"
+            android:textColor="@android:color/white"
+            android:buttonTint="@android:color/darker_gray"
+
+            />
+
+
+    </RadioGroup>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="470dp"
+        android:padding="10dp"
+        android:fontFamily="@font/exoregular"
+        android:text="How many quizes?"
+        android:textColor="@android:color/white" />
+
+    <Spinner
+        android:id="@+id/quizno"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="278dp"
+
+        style="@style/spinnerTheme"
+        android:backgroundTint="@android:color/white" />
+
+    <Button
+        android:id="@+id/submit"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="58dp"
+        android:background="@drawable/roundedbutton"
+        android:gravity="center"
+        android:text="Submit"
+        />
+
+
+</RelativeLayout>

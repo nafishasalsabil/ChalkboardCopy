@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="present">#A2E665</color>
+    <color name="p">#93C3BA</color>
+    <color name="a">#F27979</color>
+    <color name="l">#F8C491</color>
+
+    <color name="absent">#FF6961</color>
+
+    <color name="normal">#FFFFFF</color>
+
+    <color name="c1">#CBEFF9</color>
+    <color name="c2">#C9CABD</color>
+    <color name="c3">#E2D0CC</color>
+    <color name="c4">#C0DFC2</color>
+    <color name="c5">#98AEA4</color>
+    <color name="c6">#365D5A</color>
+    <color name="c7">#A8C4CF</color>
+
+    <integer-array name="classcolors">
+        <item>@color/c1</item>
+        <item>@color/c2</item>
+        <item>@color/c3</item>
+        <item>@color/c4</item>
+        <item>@color/c5</item>
+        <item>@color/c6</item>
+        <item>@color/c7</item>
+
+
+    </integer-array>
+
+
+
+
+</resources>
