@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -66,12 +67,22 @@ class ChatUserAdapter extends RecyclerView.Adapter<ChatUserAdapter.ChatUserViewH
         holder.chat_sername.setText(chatUser.getUsername());
         System.out.println(chatUser.getUsername());
         System.out.println(chatUser.getId());
+        if(chatUser.getImageUrl().equals("not_selected"))
+        {
+            holder.user_profile_pic.setImageResource(R.drawable.ic_profile);
+        }
+        else{
+            Glide.with(context).load(chatUser.getImageUrl()).into(holder.user_profile_pic);
+            System.out.println(chatUser.getImageUrl());
+
+        }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context,MessageActivity.class);
                 intent.putExtra("username",chatUser.getUsername());
                 intent.putExtra("uid",chatUser.getId());
+                intent.putExtra("profile_pic",chatUser.getImageUrl());
                 context.startActivity(intent);
             }
         });

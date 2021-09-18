@@ -39,7 +39,9 @@ public class Users_fragment extends Fragment {
     FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-
+    public static String status = "";
+    public final String PROF="Professional Account";
+    public final String HT="Tutor Account";
     String userID = firebaseAuth.getCurrentUser().getUid();
 
     public Users_fragment() {
@@ -146,9 +148,7 @@ public class Users_fragment extends Fragment {
                         chatUsers.add(chatUser);
                         System.out.println(chatUsers);
                         System.out.println("hello" + chatUser.getId());
-                        chatUserAdapter = new ChatUserAdapter(getContext(),chatUsers,false);
-                        users_recycler_view.setAdapter(chatUserAdapter);
-                        chatUserAdapter.notifyDataSetChanged();
+
                     }
                     else
                     {
@@ -162,7 +162,9 @@ public class Users_fragment extends Fragment {
                     chatUserAdapter.notifyDataSetChanged();
               */ }
 
-
+                chatUserAdapter = new ChatUserAdapter(getContext(),chatUsers,false);
+                users_recycler_view.setAdapter(chatUserAdapter);
+                chatUserAdapter.notifyDataSetChanged();
 
            /*    classAdapter = new ClassAdapter(getApplicationContext(), classitems);
                List<CourseInfo> documentData = queryDocumentSnapshots.toObjects(CourseInfo.class);

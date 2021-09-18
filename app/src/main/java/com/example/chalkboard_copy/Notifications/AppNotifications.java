@@ -14,8 +14,8 @@ import androidx.core.app.NotificationCompat;
 
 public class AppNotifications extends ContextWrapper {
 
-    public static final String CHANNEL_ID = "com.example.chalkboradnew";
-    public static final String CHANNEL_NAME = "chalkboradnew";
+    public static final String CHANNEL_ID = "com.example.chalkboard_copy";
+    public static final String CHANNEL_NAME = "chalkborad";
 
     NotificationManager notificationManager;
     public AppNotifications(Context base) {

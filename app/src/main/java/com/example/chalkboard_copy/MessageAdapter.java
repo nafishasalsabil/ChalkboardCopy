@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -26,6 +27,7 @@ class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHold
     String userID = firebaseAuth.getCurrentUser().getUid();
     Context context;
     List<ChatRecordClass> chats;
+    public String imageUrl="";
 
 
     private OnItemClickListener onItemClickListener;
@@ -40,9 +42,10 @@ class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHold
         this.onItemClickListener = onItemClickListener;
     }
 
-    public MessageAdapter(Context context, List<ChatRecordClass> chats) {
+    public MessageAdapter(Context context, List<ChatRecordClass> chats,String imageUrl) {
         this.chats = chats;
         this.context = context;
+        this.imageUrl = imageUrl;
 
 
     }
@@ -56,7 +59,7 @@ class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHold
         public MessageViewHolder(@NonNull View itemView, OnItemClickListener onItemClickListener) {
             super(itemView);
             show_message = itemView.findViewById(R.id.showmessage);
-            user_profile_pic = itemView.findViewById(R.id.user_image);
+            user_profile_pic = itemView.findViewById(R.id.chat_profile_pic);
             txt_seen = itemView.findViewById(R.id.txt_seen);
             //itemView.setOnClickListener(v -> onItemClickListener.onClick(getAdapterPosition()));
         }
@@ -81,6 +84,15 @@ class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHold
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
 
         ChatRecordClass chatRecordClass = chats.get(position);
+        if(imageUrl.equals("not_selected"))
+        {
+            holder.user_profile_pic.setImageResource(R.drawable.ic_profile);
+        }
+        else{
+            Glide.with(context).load(imageUrl).into(holder.user_profile_pic);
+            System.out.println(imageUrl);
+
+        }
         holder.show_message.setText(chats.get(position).getMessage());
         if(position==chats.size()-1)
         {
