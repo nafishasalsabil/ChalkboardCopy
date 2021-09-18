@@ -21,19 +21,26 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
@@ -57,8 +64,11 @@ public class NotificationsFragment extends Fragment {
     FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     String userID = firebaseAuth.getCurrentUser().getUid();
-
+    public static String status = "";
+    public final String PROF="Professional Account";
+    public final String HT="Tutor Account";
     private int mYear, mMonth, mDay, mHour, mMinute;
+    public static int hr=0,min=0;
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         View view =  inflater.inflate(R.layout.fragment_notifications,container,false);
@@ -67,6 +77,7 @@ public class NotificationsFragment extends Fragment {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 addReminder();
             }
         });
@@ -74,21 +85,64 @@ public class NotificationsFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
-        CollectionReference collectionReference = firestore.collection("users").document(userID)
-                .collection("Reminders");
-        collectionReference.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                List<ReminderClass> doc = queryDocumentSnapshots.toObjects(ReminderClass.class);
-                adapter = new ReminderAdapter(getContext(),temp);
-                recyclerView.setAdapter(adapter);
-                temp.addAll(doc);
-                adapter.notifyDataSetChanged();
 
+        DocumentReference documentReference_for_status = firestore.collection("users").document(userID);
+
+        documentReference_for_status.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                temp.clear();
+                DocumentSnapshot doc = task.getResult();
+                StringBuilder fields = new StringBuilder("");
+                status = fields.append(doc.get("choice")).toString();
+
+                if(status.equals("Professional teacher / Home tutor")){
+                    CollectionReference collectionReference = firestore.collection("users")
+                            .document(userID).collection("All Files")
+                            .document(PROF)
+                            .collection("Reminders");
+                    collectionReference.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            List<ReminderClass> doc = queryDocumentSnapshots.toObjects(ReminderClass.class);
+                            adapter = new ReminderAdapter(getContext(),temp);
+                            recyclerView.setAdapter(adapter);
+                            temp.addAll(doc);
+                            adapter.notifyDataSetChanged();
+
+                        }
+                    });
+
+
+                }
+                else if(!(status.equals("Professional teacher / Home tutor"))){
+                    CollectionReference collectionReference = firestore.collection("users").document(userID)
+                            .collection("Reminders");
+                    collectionReference.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            List<ReminderClass> doc = queryDocumentSnapshots.toObjects(ReminderClass.class);
+                            adapter = new ReminderAdapter(getContext(),temp);
+                            recyclerView.setAdapter(adapter);
+                            temp.addAll(doc);
+                            adapter.notifyDataSetChanged();
+
+                        }
+                    });
+
+
+                }
+
+            }
+        }) .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
             }
         });
 
-      //  setItemsInRecyclerView();
+
+
+
 
         return view;
     }
@@ -102,7 +156,7 @@ public class NotificationsFragment extends Fragment {
 
         dialog.show();
 
-         TextView date = dialog.findViewById(R.id.reminder_date);
+        TextView date = dialog.findViewById(R.id.reminder_date);
         TextView time = dialog.findViewById(R.id.reminder_time);
         EditText ddescription = dialog.findViewById(R.id.reminder_description);
 
@@ -149,73 +203,96 @@ public class NotificationsFragment extends Fragment {
                                                   int minute) {
                                 Log.d("checktime",hourOfDay + ":" + minute);
                                 time.setText(hourOfDay + ":" + minute);
+                                hr=hourOfDay;
+                                min = minute;
                             }
                         }, mHour, mMinute, false);
                 timePickerDialog.show();
 
             }
         });
-    /*    TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                selectedTimeFormat(hourOfDay);
-                select_time.setText(hourOfDay+":"+minute + format);
-            }
-        },hour,minute,true);
-        timePickerDialog.show();
-    }*/
 
         add_b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-
-
-                ReminderClass reminders = new ReminderClass();
-                //  assert message != null;
+                 ReminderClass reminders = new ReminderClass();
                  String m = ddescription.getText().toString().trim();
                 if (TextUtils.isEmpty(ddescription.getText().toString().trim())) {
                     ddescription.setError("Empty!");
-                } else {
+                }
+                else if (TextUtils.isEmpty(date.getText().toString().trim())) {
+                    date.setError("Empty!");
+                }
+                else if (TextUtils.isEmpty(time.getText().toString().trim())) {
+                    time.setError("Empty!");
+                }
+                else {
 
                     try {
-
-
                         reminders.setMessage(ddescription.getText().toString().trim());
                         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                         Date selectedDate = sdf.parse(date.getText().toString().trim()+" "+time.getText().toString());
                         long millis = selectedDate.getTime();
                         Date remind = new Date(millis);
                         Log.d("checkedtime", date.getText().toString().trim());
-
                         String d = date.getText().toString().trim();
-
-
                         reminders.setRemindDate(remind);
-                        // roomDAO.Insert(reminders);
-                        //    List<ReminderClass> l = roomDAO.getAll();
-                        //   reminders = l.get(l.size()-1);
-                        Log.d("ID chahiye", reminders.getId() + "");
-
-                        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+6:00"));
-                        calendar.setTime(remind);
-                        calendar.set(Calendar.SECOND, 0);
-//com.support.v4. Sunday,Sept 20,2020,1:30pm
-                        Log.d("checktime", reminders.getRemindDate().toString());
                         Intent intent = new Intent(getContext(), NotifierAlarm.class);
                         intent.putExtra("Message", reminders.getMessage());
                         intent.putExtra("RemindDate", reminders.getRemindDate().toString());
                         intent.putExtra("id", reminders.getId());
-                        PendingIntent intent1 = PendingIntent.getBroadcast(getContext(), reminders.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                                getActivity(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT
+                        );
+                        Calendar startTime = Calendar.getInstance();
+                        startTime.set(Calendar.HOUR_OF_DAY, hr);
+                        startTime.set(Calendar.MINUTE, min);
+                        startTime.set(Calendar.SECOND, 0);
+                        long alarmStartTime = startTime.getTimeInMillis();
                         AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(ALARM_SERVICE);
-                        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), intent1);
+                        alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarmStartTime, pendingIntent);
 
                         Toast.makeText(getContext(), "Inserted Successfully", Toast.LENGTH_SHORT).show();
-                        setItemsInRecyclerView();
-                        DocumentReference documentReference = firestore.collection("users").document(userID)
-                                .collection("Reminders").document(m);
-                        ReminderClass reminderClass = new ReminderClass(reminders.getId(), m, remind);
-                        documentReference.set(reminderClass);
+
+
+                        DocumentReference documentReference_for_status = firestore.collection("users").document(userID);
+
+                        documentReference_for_status.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                DocumentSnapshot doc = task.getResult();
+                                StringBuilder fields = new StringBuilder("");
+                                status = fields.append(doc.get("choice")).toString();
+
+                                if(status.equals("Professional teacher / Home tutor")){
+
+                                    DocumentReference documentReference =firestore.collection("users")
+                                            .document(userID).collection("All Files")
+                                            .document(PROF)
+                                            .collection("Reminders").document(m);
+                                    ReminderClass reminderClass = new ReminderClass(reminders.getId(), m, remind);
+                                    documentReference.set(reminderClass);
+                                    setItemsInRecyclerView();
+
+                                }
+                                else if(!(status.equals("Professional teacher / Home tutor"))){
+                                    DocumentReference documentReference = firestore.collection("users").document(userID)
+                                            .collection("Reminders").document(m);
+                                    ReminderClass reminderClass = new ReminderClass(reminders.getId(), m, remind);
+                                    documentReference.set(reminderClass);
+                                    setItemsInRecyclerView();
+
+                                }
+                            }
+                        }) .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                            }
+                        });
+
+
+
                         //   AppDatabase.destroyInstance();
                         dialog.dismiss();
                     }
@@ -232,17 +309,59 @@ public class NotificationsFragment extends Fragment {
     }
     public void setItemsInRecyclerView(){
 
-     /*   RoomDAO dao = appDatabase.getRoomDAO();
-        temp = dao.orderThetable();
-      */ // if(temp.size()>0) {
-         //   empty.setVisibility(View.INVISIBLE);
-            recyclerView.setVisibility(View.VISIBLE);
-     //   }   studentListAdapter = new StudentListAdapter(getApplicationContext(), studentItems);
-        //                recyclerView.setAdapter(studentListAdapter);
-        //
-        adapter = new ReminderAdapter(getContext(),temp);
-        recyclerView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+        DocumentReference documentReference_for_status = firestore.collection("users").document(userID);
+
+        documentReference_for_status.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                temp.clear();
+                DocumentSnapshot doc = task.getResult();
+                StringBuilder fields = new StringBuilder("");
+                status = fields.append(doc.get("choice")).toString();
+
+                if(status.equals("Professional teacher / Home tutor")){
+                    CollectionReference collectionReference = firestore.collection("users")
+                            .document(userID).collection("All Files")
+                            .document(PROF)
+                            .collection("Reminders");
+                    collectionReference.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            List<ReminderClass> doc = queryDocumentSnapshots.toObjects(ReminderClass.class);
+                            adapter = new ReminderAdapter(getContext(),temp);
+                            recyclerView.setAdapter(adapter);
+                            temp.addAll(doc);
+                            adapter.notifyDataSetChanged();
+
+                        }
+                    });
+
+
+                }
+                else if(!(status.equals("Professional teacher / Home tutor"))){
+                    CollectionReference collectionReference = firestore.collection("users").document(userID)
+                            .collection("Reminders");
+                    collectionReference.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            List<ReminderClass> doc = queryDocumentSnapshots.toObjects(ReminderClass.class);
+                            adapter = new ReminderAdapter(getContext(),temp);
+                            recyclerView.setAdapter(adapter);
+                            temp.addAll(doc);
+                            adapter.notifyDataSetChanged();
+
+                        }
+                    });
+
+
+                }
+
+            }
+        }) .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+            }
+        });
 
     }
 }

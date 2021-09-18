@@ -42,7 +42,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         // Prepare Notification
         Uri alertSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.drawable.physics)
+                .setSmallIcon(R.drawable.relativity)
                 .setContentTitle("You have a class Scheduled!")
                 .setContentText(message)
                 .setContentIntent(contentIntent)

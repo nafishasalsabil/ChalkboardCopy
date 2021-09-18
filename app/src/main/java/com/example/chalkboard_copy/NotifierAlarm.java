@@ -22,7 +22,7 @@ import java.util.Date;
 public class NotifierAlarm extends BroadcastReceiver {
 
    // private AppDatabase appDatabase;
-
+   private static final String CHANNEL_ID = "CHANNEL_SAMPLE";
     @Override
     public void onReceive(Context context, Intent intent) {
 
@@ -32,39 +32,47 @@ public class NotifierAlarm extends BroadcastReceiver {
         reminder.setMessage(intent.getStringExtra("Message"));
         reminder.setRemindDate(new Date(intent.getStringExtra("RemindDate")));
         reminder.setId(intent.getIntExtra("id",0));
+        int notificationId = intent.getIntExtra("id",0);
+        String message = intent.getStringExtra("Message");
        // roomDAO.Delete(reminder);
       //  AppDatabase.destroyInstance();
 
         Uri alarmsound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
 
         Intent intent1 = new Intent(context,NotificationsFragment.class);
-        intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, intent1, 0);
 
-        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
+      /*  TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
         taskStackBuilder.addParentStack(NotificationsFragment.class);
-        taskStackBuilder.addNextIntent(intent1);
+        taskStackBuilder.addNextIntent(intent1);*/
 
-        PendingIntent intent2 = taskStackBuilder.getPendingIntent(1,PendingIntent.FLAG_UPDATE_CURRENT);
+        NotificationManager notificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-
-        NotificationChannel channel = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            channel = new NotificationChannel("my_channel_01","hello", NotificationManager.IMPORTANCE_HIGH);
-        }
+            // For API 26 and above
+            CharSequence channelName = "My Notification";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
 
-        Notification notification = builder.setContentTitle("Reminder")
-                .setContentText(intent.getStringExtra("Message")).setAutoCancel(true)
-                .setSound(alarmsound).setSmallIcon(R.mipmap.ic_launcher_round)
-                .setContentIntent(intent2)
-                .setChannelId("my_channel_01")
-                .build();
-
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, channelName, importance);
             notificationManager.createNotificationChannel(channel);
         }
-        notificationManager.notify(1, notification);
 
+        // Prepare Notification
+        Uri alertSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.drawable.relativity)
+                .setContentTitle("You set a reminder!")
+                .setContentText(message)
+                .setContentIntent(contentIntent)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true)
+                .setDefaults(Notification.DEFAULT_SOUND|Notification.DEFAULT_VIBRATE)
+                .setWhen(System.currentTimeMillis());
+
+
+
+        // Notify
+        notificationManager.notify(notificationId, builder.build());
     }
 }
