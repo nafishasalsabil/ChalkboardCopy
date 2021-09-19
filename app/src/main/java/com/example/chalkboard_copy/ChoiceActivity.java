@@ -38,7 +38,7 @@ Boolean select = false;
         setContentView(R.layout.activity_choice);
 
         Intent intent = getIntent();
-        normal_signin = getIntent().getExtras().getBoolean("Normal_signin");
+        normal_signin = false;
 
         prof = findViewById(R.id.proft);
         tutor = findViewById(R.id.tutor);

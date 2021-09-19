@@ -1,5 +1,6 @@
 package com.example.chalkboard_copy;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Paint;
@@ -12,6 +13,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -85,14 +90,14 @@ Boolean normal_signin = false;
         forgot.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("1036914179252-psc26p0eum2ksh6vr12treku0alo6l1q.apps.googleusercontent.com")
+                .requestIdToken("1074227662938-f8qntntva3hr0svt00gt9f4vajquotpq.apps.googleusercontent.com")
                 .requestEmail()
                 .build();
-        googleApiClient=new GoogleApiClient.Builder(this)
+     /*   googleApiClient=new GoogleApiClient.Builder(this)
                 .enableAutoManage(this,this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API,gso)
                 .build();
-
+*/
 // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
@@ -104,14 +109,7 @@ Boolean normal_signin = false;
         google = (TextView)findViewById(R.id.singup_with_google);
 
 
-        google.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                normal_signin = false;
-                signIn();
 
-            }
-        });
 
   //      firestore = FirebaseFirestore.getInstance();
 
@@ -222,23 +220,110 @@ Boolean normal_signin = false;
             }
         });
 
+        google.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                normal_signin = false;
+                Intent signInIntent =mGoogleSignInClient.getSignInIntent();
+                System.out.println("Check clicked?");
+                resultLauncher.launch(signInIntent);
+
+            }
+        });
 
     }
+    ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult()
+            , new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+            if(result.getResultCode() == Activity.RESULT_OK)
+            {
+                System.out.println("GVVHHHBBBBBBBBBBBBBBBBBBBBBBBBB");
+                Intent intent = result.getData();
+                Task<GoogleSignInAccount> signInAccountTask = GoogleSignIn.getSignedInAccountFromIntent(intent);
 
-    private void signIn() {
+                if(signInAccountTask.isSuccessful()){
+                    Toast.makeText(getApplicationContext(),"Google sign in complete!",Toast.LENGTH_SHORT).show();
+
+                    try {
+                        GoogleSignInAccount googleSignInAccount = signInAccountTask.getResult(ApiException.class);
+
+                        if(googleSignInAccount!=null){
+                            AuthCredential authCredential = GoogleAuthProvider.getCredential(googleSignInAccount.getIdToken(),null);
+
+                            firebaseAuth.signInWithCredential(authCredential).addOnCompleteListener( new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if(task.isSuccessful()){
+
+                                        String userID = firebaseAuth.getCurrentUser().getUid();
+                                        DocumentReference documentReference1 = firestore.collection("users").document(userID);
+                                        documentReference1.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                UserClass userClass = documentSnapshot.toObject(UserClass.class);
+                                                userClass.getChoice();
+                                                if(userClass.getChoice().equals("Professional teacher"))
+                                                {
+                                                    startActivity(new Intent(getApplicationContext(), Features.class));
+                                                    Toast.makeText(Main2Activity.this, "Sign in successful!", Toast.LENGTH_SHORT).show();
+
+                                                }
+                                                else if(userClass.getChoice().equals("Home tutor"))
+                                                {
+                                                    startActivity(new Intent(getApplicationContext(), MainActivity_HomeTutor.class));
+                                                    Toast.makeText(Main2Activity.this, "Sign in successful!", Toast.LENGTH_SHORT).show();
+
+                                                }
+                                                else if(userClass.getChoice().equals("Professional teacher / Home tutor"))
+                                                {
+                                                    Intent intent = new Intent(getApplicationContext(),Features.class);
+                                                    /*intent.putExtra("Normal_signin",false);*/
+                                                    startActivity(intent);
+                                                    Toast.makeText(Main2Activity.this, "Sign in successful!", Toast.LENGTH_SHORT).show();
+
+                                                }
+                                            }
+                                        });
+
+
+                                    }
+                                }
+                            });
+                        }
+                    } catch (ApiException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            else{
+                System.out.println("NOT OK");
+                System.out.println(result.getResultCode());
+            }
+        }
+    });
+
+   /* private void signIn() {
+
+
         Intent signInIntent =mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, 100);
-    }
+        
+        this.startActivityForResult(signInIntent, 100);
+    }*/
+    
 
 
-    @Override
+
+
+
+   /* @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == 100) {
-            /*GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            handleSignInResult(result);*/
+            *//*GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleSignInResult(result);*//*
 
             Task<GoogleSignInAccount> signInAccountTask = GoogleSignIn.getSignedInAccountFromIntent(data);
 
@@ -297,7 +382,7 @@ Boolean normal_signin = false;
 
         }
     }
-
+*/
     private void handleSignInResult(GoogleSignInResult result) {
         if(result.isSuccess()){
             gotoProfile();
