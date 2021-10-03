@@ -20,11 +20,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 import java.util.List;
 
@@ -32,7 +37,10 @@ class HomeTutorClassAdapter extends FirestoreRecyclerAdapter<CourseInfoHomeTutor
 
     Context context;
     List<CourseInfo> classitems;
-
+    public static String status = "";
+    public final String PROF="Professional Account";
+    public final String HT="Tutor Account";
+    CollectionReference collectionReference;
     DocumentSnapshot documentSnapshot;
 
     /**
@@ -104,7 +112,7 @@ class HomeTutorClassAdapter extends FirestoreRecyclerAdapter<CourseInfoHomeTutor
                 public void onClick(View v) {
 //                    onItemClickListener.onClick(ClassViewHolder.this.getAdapterPosition());
                     Intent intent = new Intent(v.getContext(),Batch_inside_courses_home_tutor.class);
-                    intent.putExtra("className",course.getText());
+                    intent.putExtra("title",course.getText());
                    // System.out.println(classname.getText());
                     v.getContext().startActivity(intent);
                 }
@@ -151,8 +159,51 @@ class HomeTutorClassAdapter extends FirestoreRecyclerAdapter<CourseInfoHomeTutor
                     @Override
                     public void onClick(View v) {
                         if (isClassNameChanged()){
-                            Toast.makeText(context,"Your profile has been updated!", Toast.LENGTH_SHORT).show();
-                            documentReference = firestore.collection("users").document(userID).collection("Courses").document(model.getCourseName());
+
+
+
+                            DocumentReference documentReference_for_status = firestore.collection("users").document(userID);
+
+                            documentReference_for_status.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    DocumentSnapshot doc = task.getResult();
+                                    StringBuilder fields = new StringBuilder("");
+                                    status = fields.append(doc.get("choice")).toString();
+
+                                    if(status.equals("Professional teacher / Home tutor")){
+
+                                        documentReference = firestore.collection("users")
+                                                .document(userID).collection("All Files")
+                                                .document(HT).collection("Courses").document(model.getCourseName());
+
+
+                                    }
+                                    else if(!(status.equals("Professional teacher / Home tutor"))){
+                                        Toast.makeText(context,"Your profile has been updated!", Toast.LENGTH_SHORT).show();
+                                        documentReference = firestore.collection("users")
+                                                .document(userID).collection("Courses").document(model.getCourseName());
+
+
+
+                                    }
+
+
+
+
+
+                                }
+                            }) .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                }
+                            });
+
+
+
+
+
+
 
                             //!(classitems.get(position).getCourseTitle()).equals(editcoursetitle.getText()) || !(classitems.get(position).getCourseNo()).equals(editcourseno.getText())
                             dialog.dismiss();
@@ -166,17 +217,65 @@ class HomeTutorClassAdapter extends FirestoreRecyclerAdapter<CourseInfoHomeTutor
                     private boolean isClassNameChanged() {
                         if(!((model.getClassName()).equals(editclassname.getText())))
                         {
-                            documentReference = firestore.collection("users").document(userID).collection("Courses").document(model.getCourseName());
 
-                            String cp = editclassname.getText().toString();
-                          //  classitems.get(position).setCourseTitle(cp);
-                            documentReference.update("className", cp).addOnSuccessListener(new OnSuccessListener<Void>() {
+
+
+                            DocumentReference documentReference_for_status = firestore.collection("users").document(userID);
+
+                            documentReference_for_status.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
-                                public void onSuccess(Void aVoid) {
-                                    Toast.makeText(context,"Your course has been updated!", Toast.LENGTH_SHORT).show();
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    DocumentSnapshot doc = task.getResult();
+                                    StringBuilder fields = new StringBuilder("");
+                                    status = fields.append(doc.get("choice")).toString();
+
+                                    if(status.equals("Professional teacher / Home tutor")){
+
+                                        documentReference = firestore.collection("users")
+                                                .document(userID).collection("All Files")
+                                                .document(HT).collection("Courses").document(model.getCourseName());
+                                        String cp = editclassname.getText().toString();
+                                        documentReference.update("className", cp).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Toast.makeText(context,"Your course has been updated!", Toast.LENGTH_SHORT).show();
+
+                                            }
+                                        });
+
+                                    }
+                                    else if(!(status.equals("Professional teacher / Home tutor"))){
+                                        Toast.makeText(context,"Your profile has been updated!", Toast.LENGTH_SHORT).show();
+                                        documentReference = firestore.collection("users").document(userID).collection("Courses").document(model.getCourseName());
+
+                                        String cp = editclassname.getText().toString();
+
+                                        documentReference.update("className", cp).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Toast.makeText(context,"Your course has been updated!", Toast.LENGTH_SHORT).show();
+
+                                            }
+                                        });
+
+                                    }
+
+
+
+
 
                                 }
+                            }) .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                }
                             });
+
+
+
+
+                            //  classitems.get(position).setCourseTitle(cp);
+
                             return true;
 
                             //  holder.classname.setText(cp);

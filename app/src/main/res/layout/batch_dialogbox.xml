@@ -36,7 +36,7 @@
             android:background="@drawable/roundededittext"
             android:cursorVisible="true"
             android:gravity="center"
-
+            android:inputType="number"
             android:hint="Number of Days" />
 
         <EditText
@@ -73,7 +73,7 @@
             android:background="@drawable/roundededittext"
             android:cursorVisible="true"
             android:gravity="center"
-
+            android:inputType="number"
             android:hint="Payment for per student" />
 
 

@@ -76,8 +76,8 @@ class QuizMarksHTAdapter extends RecyclerView.Adapter<QuizMarksHTAdapter.QuizMar
                 public void onClick(View v) {
 //                    onItemClickListener.onClick(ClassViewHolder.this.getAdapterPosition());
                     Intent intent = new Intent(v.getContext(),QuizMarksRecordHT.class);
-                    intent.putExtra("Title",title);
-                    intent.putExtra("Section",sec);
+                    intent.putExtra("title",title);
+                    intent.putExtra("section",sec);
                     intent.putExtra("quiz",quiz_title.getText());
 
                     // System.out.println(classname.getText());

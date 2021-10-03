@@ -28,8 +28,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -78,6 +81,9 @@ public class StudentListHometutor extends AppCompatActivity {
     CourseInfo courseInfo = new CourseInfo();
     public static int id1;
     Toolbar toolbar_list;
+    public static String status = "";
+    public final String PROF="Professional Account";
+    public final String HT="Tutor Account";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +102,8 @@ public class StudentListHometutor extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar_list.setNavigationIcon(R.drawable.ic_back);
         getSupportActionBar().setElevation(0);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setTitle("Attendance");
+        toolbar_list.setTitleTextColor(Color.BLACK);
         toolbar_list.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,48 +124,116 @@ public class StudentListHometutor extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        DocumentReference retrievesection = firestore.collection("users")
-                .document(userID).collection("Courses").document(clicked_courseTitle);
 
-        retrievesection.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+
+
+        DocumentReference documentReference_for_status = firestore.collection("users").document(userID);
+
+        documentReference_for_status.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {
-                    String k = documentSnapshot.getString("section");
-                    courseInfo.setSection(k);
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot doc = task.getResult();
+                StringBuilder fields = new StringBuilder("");
+                status = fields.append(doc.get("choice")).toString();
+
+                if(status.equals("Professional teacher / Home tutor")){
+
+                    DocumentReference retrievesection = firestore.collection("users")
+                            .document(userID).collection("All Files")
+                            .document(HT).collection("Courses").document(clicked_courseTitle);
+
+                    retrievesection.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            if (documentSnapshot.exists()) {
+                                String k = documentSnapshot.getString("section");
+                                courseInfo.setSection(k);
+                            }
+                        }
+                    })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                }
+                            });
+                    studentcollection = firestore.collection("users")
+                            .document(userID).collection("All Files")
+                            .document(HT).collection("Courses").document(clicked_courseTitle).collection("Batches")
+                            .document(clicked_course_section)
+                            .collection("Students");
+                    studentcollection.orderBy("id", Query.Direction.ASCENDING).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            List<StudentItems> documentData = queryDocumentSnapshots.toObjects(StudentItems.class);
+                            studentListAdapter = new StudentListHometutorAdapter(getApplicationContext(), studentItems);
+                            recyclerView.setAdapter(studentListAdapter);
+                            studentItems.addAll(documentData);
+                            studentListAdapter.notifyDataSetChanged();
+                            t1.setVisibility(View.GONE);
+                            t2.setVisibility(View.GONE);
+                            done.setVisibility(View.GONE);
+                            add_new_student_fab_menu.setVisibility(View.GONE);
+                            for (int i = 0; i < studentItems.size(); i++) {
+                                System.out.println(studentItems.get(i).toString());
+                            }
+
+                        }
+                    });
                 }
+                else if(!(status.equals("Professional teacher / Home tutor"))){
+                    DocumentReference retrievesection = firestore.collection("users")
+                            .document(userID).collection("Courses").document(clicked_courseTitle);
+
+                    retrievesection.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            if (documentSnapshot.exists()) {
+                                String k = documentSnapshot.getString("section");
+                                courseInfo.setSection(k);
+                            }
+                        }
+                    })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                }
+                            });
+                    studentcollection = firestore.collection("users").document(userID)
+                            .collection("Courses").document(clicked_courseTitle).collection("Batches")
+                            .document(clicked_course_section)
+                            .collection("Students");
+                    studentcollection.orderBy("id", Query.Direction.ASCENDING).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            List<StudentItems> documentData = queryDocumentSnapshots.toObjects(StudentItems.class);
+                            studentListAdapter = new StudentListHometutorAdapter(getApplicationContext(), studentItems);
+                            recyclerView.setAdapter(studentListAdapter);
+                            studentItems.addAll(documentData);
+                            studentListAdapter.notifyDataSetChanged();
+                            t1.setVisibility(View.GONE);
+                            t2.setVisibility(View.GONE);
+                            done.setVisibility(View.GONE);
+                            add_new_student_fab_menu.setVisibility(View.GONE);
+                            for (int i = 0; i < studentItems.size(); i++) {
+                                System.out.println(studentItems.get(i).toString());
+                            }
+
+                        }
+                    });
+
+                }
+
+
+
+
             }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                    }
-                });
-        studentcollection = firestore.collection("users").document(userID)
-                .collection("Courses").document(clicked_courseTitle).collection("Batches")
-                .document(clicked_course_section)
-                .collection("Students");
-        studentcollection.orderBy("id", Query.Direction.ASCENDING).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        }) .addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                List<StudentItems> documentData = queryDocumentSnapshots.toObjects(StudentItems.class);
-                studentListAdapter = new StudentListHometutorAdapter(getApplicationContext(), studentItems);
-                recyclerView.setAdapter(studentListAdapter);
-                studentItems.addAll(documentData);
-                studentListAdapter.notifyDataSetChanged();
-                t1.setVisibility(View.GONE);
-                t2.setVisibility(View.GONE);
-                done.setVisibility(View.GONE);
-                add_new_student_fab_menu.setVisibility(View.GONE);
-                for (int i = 0; i < studentItems.size(); i++) {
-                    System.out.println(studentItems.get(i).toString());
-                }
-
+            public void onFailure(@NonNull Exception e) {
             }
         });
 
-
-        add_student.setOnClickListener(new View.OnClickListener() {
+            add_student.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 add_func();
@@ -336,14 +411,8 @@ public class StudentListHometutor extends AppCompatActivity {
 
         cancel.setOnClickListener(v -> dialog.dismiss());
         add.setOnClickListener((View v) -> {
-            // addstudent();
-         /*   present.setVisibility(View.VISIBLE);
-            absent.setVisibility(View.VISIBLE);
-            late.setVisibility(View.VISIBLE);
-         */
-          /*  t1.setVisibility(View.GONE);
-            t2.setVisibility(View.GONE);
-          */  fab.setVisibility(View.INVISIBLE);
+
+            fab.setVisibility(View.INVISIBLE);
             String d_d = studentItems_object.getLecture_date();
             if(TextUtils.isEmpty(id.getText()))
             {
@@ -364,49 +433,134 @@ public class StudentListHometutor extends AppCompatActivity {
                 studentItems.add(new StudentItems(id1, name1, "not_taken", l_l, d_d));
                 studentListAdapter.notifyDataSetChanged();
 
-                studentsdocument = firestore.collection("users").document(userID)
-                        .collection("Courses").document(clicked_courseTitle)
-                        .collection("Batches").document(clicked_course_section)
-                        .collection("Students").document(Integer.toString(id1));
-                Map<String, Object> inuser = new HashMap<>();
-                inuser.put("id", id1);
-                inuser.put("name", name1);
 
-                studentsdocument.set(inuser).addOnSuccessListener(new OnSuccessListener<Void>() {
+                DocumentReference documentReference_for_status = firestore.collection("users").document(userID);
+
+                documentReference_for_status.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(getApplicationContext(), "The student is added!", Toast.LENGTH_SHORT).show();
-                        DocumentReference documentReference4 = firestore.collection("users").document(userID)
-                                .collection("Courses").document(clicked_courseTitle)
-                                .collection("Batches").document(clicked_course_section)
-                                .collection("Class_Performance").document(Integer.toString(id1));
-                        Map<String, Object> perf = new HashMap<>();
-                        perf.put("id", id1);
-                        perf.put("name", name1);
-                        perf.put("count",0);
-                        documentReference4.set(perf);
-                        DocumentReference documentReference5 = firestore.collection("users").document(userID)
-                                .collection("Courses").document(clicked_courseTitle)
-                                .collection("Batches").document(clicked_course_section)
-                                .collection("Monthly_Payments").document(Integer.toString(id1));
-                        Map<String, Object> j = new HashMap<>();
-                        j.put("id", id1);
-                        j.put("name", name1);
-                        j.put("payment","unpaid");
-                        documentReference5.set(j);
-                        DocumentReference documentReference = firestore.collection("users").document(userID)
-                                .collection("Courses").document(clicked_courseTitle)
-                                .collection("Batches").document(clicked_course_section)
-                                .collection("Class_Performance")
-                                .document(Integer.toString(id1))
-                                .collection("Marks").document("Coverted_to_100");
-                        Map<String, Object> user1 = new HashMap<>();
-                        user1.put("percentage", 0);
-                        documentReference.set(user1);
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot doc = task.getResult();
+                        StringBuilder fields = new StringBuilder("");
+                        status = fields.append(doc.get("choice")).toString();
 
-                        dialog.dismiss();
+                        if(status.equals("Professional teacher / Home tutor")){
+                            studentsdocument = firestore.collection("users")
+                                    .document(userID).collection("All Files")
+                                    .document(HT).collection("Courses").document(clicked_courseTitle)
+                                    .collection("Batches").document(clicked_course_section)
+                                    .collection("Students").document(Integer.toString(id1));
+                            Map<String, Object> inuser = new HashMap<>();
+                            inuser.put("id", id1);
+                            inuser.put("name", name1);
+
+                            studentsdocument.set(inuser).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(getApplicationContext(), "The student is added!", Toast.LENGTH_SHORT).show();
+                                    DocumentReference documentReference4 = firestore.collection("users")
+                                            .document(userID).collection("All Files")
+                                            .document(HT).collection("Courses").document(clicked_courseTitle)
+                                            .collection("Batches").document(clicked_course_section)
+                                            .collection("Class_Performance").document(Integer.toString(id1));
+                                    Map<String, Object> perf = new HashMap<>();
+                                    perf.put("id", id1);
+                                    perf.put("name", name1);
+                                    perf.put("count",0);
+                                    documentReference4.set(perf);
+                                    DocumentReference documentReference5 = firestore.collection("users")
+                                            .document(userID).collection("All Files")
+                                            .document(HT).collection("Courses").document(clicked_courseTitle)
+                                            .collection("Batches").document(clicked_course_section)
+                                            .collection("Monthly_Payments").document(Integer.toString(id1));
+                                    Map<String, Object> j = new HashMap<>();
+                                    j.put("id", id1);
+                                    j.put("name", name1);
+                                    j.put("payment","unpaid");
+                                    documentReference5.set(j);
+                                    DocumentReference documentReference = firestore.collection("users")
+                                            .document(userID).collection("All Files")
+                                            .document(HT).collection("Courses").document(clicked_courseTitle)
+                                            .collection("Batches").document(clicked_course_section)
+                                            .collection("Class_Performance")
+                                            .document(Integer.toString(id1))
+                                            .collection("Marks").document("Coverted_to_100");
+                                    Map<String, Object> user1 = new HashMap<>();
+                                    user1.put("percentage", 0);
+                                    documentReference.set(user1);
+
+                                    dialog.dismiss();
+                                }
+                            });
+
+                        }
+                        else if(!(status.equals("Professional teacher / Home tutor"))){
+
+                            studentsdocument = firestore.collection("users").document(userID)
+                                    .collection("Courses").document(clicked_courseTitle)
+                                    .collection("Batches").document(clicked_course_section)
+                                    .collection("Students").document(Integer.toString(id1));
+                            Map<String, Object> inuser = new HashMap<>();
+                            inuser.put("id", id1);
+                            inuser.put("name", name1);
+
+                            studentsdocument.set(inuser).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(getApplicationContext(), "The student is added!", Toast.LENGTH_SHORT).show();
+                                    DocumentReference documentReference4 = firestore.collection("users").document(userID)
+                                            .collection("Courses").document(clicked_courseTitle)
+                                            .collection("Batches").document(clicked_course_section)
+                                            .collection("Class_Performance").document(Integer.toString(id1));
+                                    Map<String, Object> perf = new HashMap<>();
+                                    perf.put("id", id1);
+                                    perf.put("name", name1);
+                                    perf.put("count",0);
+                                    documentReference4.set(perf);
+                                    DocumentReference documentReference5 = firestore.collection("users").document(userID)
+                                            .collection("Courses").document(clicked_courseTitle)
+                                            .collection("Batches").document(clicked_course_section)
+                                            .collection("Monthly_Payments").document(Integer.toString(id1));
+                                    Map<String, Object> j = new HashMap<>();
+                                    j.put("id", id1);
+                                    j.put("name", name1);
+                                    j.put("payment","unpaid");
+                                    documentReference5.set(j);
+                                    DocumentReference documentReference = firestore.collection("users").document(userID)
+                                            .collection("Courses").document(clicked_courseTitle)
+                                            .collection("Batches").document(clicked_course_section)
+                                            .collection("Class_Performance")
+                                            .document(Integer.toString(id1))
+                                            .collection("Marks").document("Coverted_to_100");
+                                    Map<String, Object> user1 = new HashMap<>();
+                                    user1.put("percentage", 0);
+                                    documentReference.set(user1);
+
+                                    dialog.dismiss();
+                                }
+                            });
+
+
+                        }
+
+
+
+
+
+                    }
+                }) .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
                     }
                 });
+
+
+
+
+
+
+
+
+
             }
 
 
@@ -461,56 +615,129 @@ public class StudentListHometutor extends AppCompatActivity {
             public void onClick(View v) {
                     Lecture_s_ht = lecture_text.getText().toString().trim();
                    studentItems_object.setLecture_name(Lecture_s_ht);
-                //      System.out.println(object.getStudent_name());
-
-                String s_name = studentItems_object.getName();
+                          String s_name = studentItems_object.getName();
                 int s_id = studentItems_object.getId();
                 System.out.println(studentItems_object.getId());
                 String d_d = studentItems_object.getLecture_date();
-                documentReference2 = firestore.collection("users").document(userID).collection("Courses")
-                        .document(clicked_courseTitle).collection("Batches").document(clicked_course_section)
-                        .collection("Attendance")
-                        .document(Lecture_s_ht);
-                Map<String, Object> inuser = new HashMap<>();
-                inuser.put("lecture_name", Lecture_s_ht);
-                inuser.put("lecture_date", d_d);
+                DocumentReference documentReference_for_status = firestore.collection("users").document(userID);
 
-                documentReference2.set(inuser).addOnSuccessListener(new OnSuccessListener<Void>() {
+                documentReference_for_status.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
-                    public void onSuccess(Void aVoid) {
-                        //   Toast.makeText(Attendance_activity.this, "The student is added!", Toast.LENGTH_SHORT).show();
-                        studentcollection = firestore.collection("users").document(userID)
-                                .collection("Courses").document(clicked_courseTitle).collection("Batches")
-                                .document(clicked_course_section)
-                                .collection("Students");
-                        studentcollection.orderBy("id", Query.Direction.ASCENDING).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                            @Override
-                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                List<StudentItems> documentData = queryDocumentSnapshots.toObjects(StudentItems.class);
-                                studentItems.addAll(documentData);
-                                for(QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot doc = task.getResult();
+                        StringBuilder fields = new StringBuilder("");
+                        status = fields.append(doc.get("choice")).toString();
 
-                                    StudentItems studentItems1 = documentSnapshot.toObject(StudentItems.class);
-                                    DocumentReference documentReference3 = firestore.collection("users").document(userID)
-                                            .collection("Courses").document(clicked_courseTitle).collection("Batches").document(clicked_course_section)
-                                            .collection("Attendance").document(Lecture_s_ht).collection("Status").document(Integer.toString(studentItems1.getId()));
-                                    Map<String, Object> inuser = new HashMap<>();
-                                    inuser.put("id", studentItems1.getId());
-                                    inuser.put("name", studentItems1.getName());
-                                    inuser.put("status", "not_taken");
+                        if(status.equals("Professional teacher / Home tutor")){
+                            documentReference2 = firestore.collection("users")
+                                    .document(userID).collection("All Files")
+                                    .document(HT).collection("Courses")
+                                    .document(clicked_courseTitle).collection("Batches").document(clicked_course_section)
+                                    .collection("Attendance")
+                                    .document(Lecture_s_ht);
+                            Map<String, Object> inuser = new HashMap<>();
+                            inuser.put("lecture_name", Lecture_s_ht);
+                            inuser.put("lecture_date", d_d);
 
-                                    documentReference3.set(inuser);
+                            documentReference2.set(inuser).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    //   Toast.makeText(Attendance_activity.this, "The student is added!", Toast.LENGTH_SHORT).show();
+                                    studentcollection = firestore.collection("users")
+                                            .document(userID).collection("All Files")
+                                            .document(HT).collection("Courses")
+                                            .document(clicked_courseTitle).collection("Batches")
+                                            .document(clicked_course_section)
+                                            .collection("Students");
+                                    studentcollection.orderBy("id", Query.Direction.ASCENDING).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                            List<StudentItems> documentData = queryDocumentSnapshots.toObjects(StudentItems.class);
+                                            studentItems.addAll(documentData);
+                                            for(QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+
+                                                StudentItems studentItems1 = documentSnapshot.toObject(StudentItems.class);
+                                                DocumentReference documentReference3 = firestore.collection("users")
+                                                        .document(userID).collection("All Files")
+                                                        .document(HT).collection("Courses")
+                                                        .document(clicked_courseTitle).collection("Batches").document(clicked_course_section)
+                                                        .collection("Attendance").document(Lecture_s_ht).collection("Status").document(Integer.toString(studentItems1.getId()));
+                                                Map<String, Object> inuser = new HashMap<>();
+                                                inuser.put("id", studentItems1.getId());
+                                                inuser.put("name", studentItems1.getName());
+                                                inuser.put("status", "not_taken");
+
+                                                documentReference3.set(inuser);
+
+
+
+                                            }
+                                        }
+                                    });
 
 
 
                                 }
-                            }
-                        });
+                            });
+                        }
+                        else if(!(status.equals("Professional teacher / Home tutor"))){
+                            documentReference2 = firestore.collection("users").document(userID).collection("Courses")
+                                    .document(clicked_courseTitle).collection("Batches").document(clicked_course_section)
+                                    .collection("Attendance")
+                                    .document(Lecture_s_ht);
+                            Map<String, Object> inuser = new HashMap<>();
+                            inuser.put("lecture_name", Lecture_s_ht);
+                            inuser.put("lecture_date", d_d);
+
+                            documentReference2.set(inuser).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    //   Toast.makeText(Attendance_activity.this, "The student is added!", Toast.LENGTH_SHORT).show();
+                                    studentcollection = firestore.collection("users").document(userID)
+                                            .collection("Courses").document(clicked_courseTitle).collection("Batches")
+                                            .document(clicked_course_section)
+                                            .collection("Students");
+                                    studentcollection.orderBy("id", Query.Direction.ASCENDING).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                            List<StudentItems> documentData = queryDocumentSnapshots.toObjects(StudentItems.class);
+                                            studentItems.addAll(documentData);
+                                            for(QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+
+                                                StudentItems studentItems1 = documentSnapshot.toObject(StudentItems.class);
+                                                DocumentReference documentReference3 = firestore.collection("users").document(userID)
+                                                        .collection("Courses").document(clicked_courseTitle).collection("Batches").document(clicked_course_section)
+                                                        .collection("Attendance").document(Lecture_s_ht).collection("Status").document(Integer.toString(studentItems1.getId()));
+                                                Map<String, Object> inuser = new HashMap<>();
+                                                inuser.put("id", studentItems1.getId());
+                                                inuser.put("name", studentItems1.getName());
+                                                inuser.put("status", "not_taken");
+
+                                                documentReference3.set(inuser);
+
+
+
+                                            }
+                                        }
+                                    });
+
+
+
+                                }
+                            });
+
+                        }
 
 
 
                     }
+                }) .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                    }
                 });
+
+
 
                 Intent intent = new Intent(getApplicationContext(),Attendance_activity_hometutor.class);
                 intent.putExtra("title",clicked_courseTitle);

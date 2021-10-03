@@ -1,20 +1,26 @@
 package com.example.chalkboard_copy;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.chalkboard_copy.Notifications.APIService;
 import com.example.chalkboard_copy.Notifications.Client;
 import com.example.chalkboard_copy.Notifications.Data;
@@ -65,6 +71,8 @@ public class MessageActivityHomeTutor extends AppCompatActivity {
     boolean notify = false;
     APIService apiService;
     DocumentReference documentReference12;
+    public static String imageUrl="";
+    public static String usernn = "",em="",img="",cho="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,14 +119,35 @@ public class MessageActivityHomeTutor extends AppCompatActivity {
                     if(chatUser.getUsername().equals(un))
                     {
                         username_textview.setText(chatUser.getUsername());
-                        //  reciever = chatUser.getUsername();
+                        usernn=chatUser.getUsername();
+                        em=chatUser.getEmail();
+                        cho=chatUser.getChoice();
+                        if(chatUser.getImageUrl().equals("not_selected"))
+                        {
+                            profile.setImageResource(R.drawable.ic_profile);
+                        }
+                        else{
+                            Glide.with(getApplicationContext()).load(chatUser.getImageUrl()).into(profile);
+                            imageUrl = chatUser.getImageUrl();
+                        }
+
                         readMessage(userID,passed_u_id);
                     }
+
                 }
 
             }
 
         });
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                showUserInfo();
+
+            }
+        });
+
         send_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,9 +173,50 @@ public class MessageActivityHomeTutor extends AppCompatActivity {
         seenMessage(passed_u_id);
 
     }
+
+    private void showUserInfo() {
+        AlertDialog.Builder alerDialog = new AlertDialog.Builder(this);
+        View view = LayoutInflater.from(this).inflate(R.layout.user_info_bottomsheet, null);
+        alerDialog.setView(view);
+        AlertDialog dialog = alerDialog.create();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        dialog.show();
+
+        TextView t1 = view.findViewById(R.id.prof_tv);
+        TextView t2 = view.findViewById(R.id.email_tv);
+        TextView t3 = view.findViewById(R.id.name_textview);
+        CircleImageView circleImageView = view.findViewById(R.id.userimg);
+        ImageView imageView = view.findViewById(R.id.cancel_img);
+
+        t1.setText(cho);
+        t2.setText(em);
+        t3.setText(usernn);
+        if(imageUrl.equals("not_selected"))
+        {
+            circleImageView.setImageResource(R.drawable.ic_profile);
+        }
+        else{
+            Glide.with(getApplicationContext()).load(imageUrl).into(circleImageView);
+
+        }
+
+        //     dialog.create();
+        dialog.show();
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+
+    }
+
     private void seenMessage(String userId)
     {
-        CollectionReference collectionReference2 = firestore.collection("home_tutor_chats");
+        CollectionReference collectionReference2 = firestore.collection("chats");
         collectionReference2.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -178,7 +248,7 @@ public class MessageActivityHomeTutor extends AppCompatActivity {
 
     }
     private void readMessage(String userID, String passed_u_id) {
-        CollectionReference collectionReference1 = firestore.collection("home_tutor_chats");
+        CollectionReference collectionReference1 = firestore.collection("chats");
         collectionReference1.orderBy("time", Query.Direction.ASCENDING).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -195,7 +265,7 @@ public class MessageActivityHomeTutor extends AppCompatActivity {
                     {
                         chatRecordClasses.add(object);
                     }
-                    messageAdapter = new MessageHomeTutorAdapter(getApplicationContext(), chatRecordClasses);
+                    messageAdapter = new MessageHomeTutorAdapter(getApplicationContext(), chatRecordClasses,imageUrl);
                     messages_recyclerview.setAdapter(messageAdapter);
                     messageAdapter.notifyDataSetChanged();
                     for(int i = 0;i<chatRecordClasses.size();i++)
@@ -231,9 +301,9 @@ public class MessageActivityHomeTutor extends AppCompatActivity {
 */}
 
     private void sendMessage(String userID, String passed_u_id, String message, String ts, boolean isSeen) {
-        CollectionReference documentReference = firestore.collection("home_tutor_chats");
+        CollectionReference documentReference = firestore.collection("chats");
         ChatRecordClass chatRecordClass = new ChatRecordClass(userID,passed_u_id,message,ts,false);
-        messageAdapter = new MessageHomeTutorAdapter(getApplicationContext(), chatRecordClasses);
+        messageAdapter = new MessageHomeTutorAdapter(getApplicationContext(), chatRecordClasses,imageUrl);
         messages_recyclerview.setAdapter(messageAdapter);
         chatRecordClasses.add(chatRecordClass);
         messageAdapter.notifyDataSetChanged();

@@ -4,6 +4,7 @@ package com.example.chalkboard_copy;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -18,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -29,6 +31,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
@@ -56,6 +59,9 @@ public class UserProfileHomeTutor extends AppCompatActivity {
     private Uri image_url;
     private StorageTask uploadTask;
     ImageView pro_pic;
+    public static String status = "";
+    public final String PROF="Professional Account";
+    public final String HT="Tutor Account";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,7 +75,8 @@ public class UserProfileHomeTutor extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar_user.setNavigationIcon(R.drawable.ic_back);
         getSupportActionBar().setElevation(0);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setTitle("My Profile");
+        toolbar_user.setTitleTextColor(Color.BLACK);
         toolbar_user.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,16 +101,59 @@ public class UserProfileHomeTutor extends AppCompatActivity {
 
             }
         });
-        CollectionReference collectionReference = firestore.collection("users").document(userID).collection("Courses");
-        collectionReference.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                List<CourseInfo> courseInfoList = queryDocumentSnapshots.toObjects(CourseInfo.class);
 
-                System.out.println(courseInfoList.size());
-                no_of_courses.setText(String.valueOf(courseInfoList.size()));
+
+
+
+        DocumentReference documentReference_for_status = firestore.collection("users").document(userID);
+
+        documentReference_for_status.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot doc = task.getResult();
+                StringBuilder fields = new StringBuilder("");
+                status = fields.append(doc.get("choice")).toString();
+
+                if(status.equals("Professional teacher / Home tutor")){
+                    CollectionReference collectionReference =firestore.collection("users")
+                            .document(userID).collection("All Files")
+                            .document(HT).collection("Courses");
+                    collectionReference.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            List<CourseInfo> courseInfoList = queryDocumentSnapshots.toObjects(CourseInfo.class);
+
+                            System.out.println(courseInfoList.size());
+                            no_of_courses.setText(String.valueOf(courseInfoList.size()));
+                        }
+                    });
+
+                }
+                else if(!(status.equals("Professional teacher / Home tutor"))){
+                    CollectionReference collectionReference = firestore.collection("users").document(userID).collection("Courses");
+                    collectionReference.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            List<CourseInfo> courseInfoList = queryDocumentSnapshots.toObjects(CourseInfo.class);
+
+                            System.out.println(courseInfoList.size());
+                            no_of_courses.setText(String.valueOf(courseInfoList.size()));
+                        }
+                    });
+
+                }
+
+            }
+        }) .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
             }
         });
+
+
+
+
+
 
         profile_pic_upload.setOnClickListener(new View.OnClickListener() {
             @Override

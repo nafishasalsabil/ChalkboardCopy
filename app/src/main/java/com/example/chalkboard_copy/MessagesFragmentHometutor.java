@@ -48,7 +48,7 @@ public class MessagesFragmentHometutor extends Fragment {
         recyclerView_messages_fragment.setHasFixedSize(true);
         recyclerView_messages_fragment.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        CollectionReference collectionReference1 = firestore.collection("home_tutor_chats");
+        CollectionReference collectionReference1 = firestore.collection("chats");
         collectionReference1.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {

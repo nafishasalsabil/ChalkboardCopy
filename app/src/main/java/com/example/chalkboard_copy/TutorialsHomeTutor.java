@@ -24,7 +24,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -54,9 +57,12 @@ public class TutorialsHomeTutor extends AppCompatActivity {
     FloatingActionButton imageAddLinkMain;
     public String tutorial_title  ="";
     public String tutorial_link  ="";
-
+    public static String status = "";
+    public final String PROF="Professional Account";
+    public final String HT="Tutor Account";
     public String course_title = "";
     public String course_section = "";
+    CollectionReference collectionReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,20 +91,60 @@ public class TutorialsHomeTutor extends AppCompatActivity {
         tutorials_recyclerview = findViewById(R.id.tutorialsRecyclerView_ht);
         tutorials_recyclerview.setHasFixedSize(true);
         tutorials_recyclerview.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        CollectionReference collectionReference = firestore.collection("users").document(userID)
-                .collection("Courses").document(course_title).collection("Batches")
-                .document(course_section)
-                .collection("Tutorials");
-        Query query = collectionReference;
-        FirestoreRecyclerOptions<TutorialsClass> options = new FirestoreRecyclerOptions.Builder<TutorialsClass>()
-                .setQuery(query, TutorialsClass.class)
-                .build();
-        tutorialAdapter = new TutorialHomeTutorAdapter(options);
-        tutorials_recyclerview.setAdapter(tutorialAdapter);
-        // classitems.addAll(options);
-        tutorialAdapter.notifyDataSetChanged();
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
-        itemTouchHelper.attachToRecyclerView(tutorials_recyclerview);
+
+        DocumentReference documentReference_for_status = firestore.collection("users").document(userID);
+
+        documentReference_for_status.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot doc = task.getResult();
+                StringBuilder fields = new StringBuilder("");
+                status = fields.append(doc.get("choice")).toString();
+
+                if(status.equals("Professional teacher / Home tutor")){
+
+
+                    collectionReference = firestore.collection("users").document(userID).
+                            collection("All Files").document(HT).collection("Courses").document(course_title).collection("Batches")
+                            .document(course_section)
+                            .collection("Tutorials");
+
+
+
+                }
+                else if(!(status.equals("Professional teacher / Home tutor"))){
+                    collectionReference = firestore.collection("users").document(userID)
+                            .collection("Courses").document(course_title).collection("Batches")
+                            .document(course_section)
+                            .collection("Tutorials");
+
+
+
+                }
+
+                Query query = collectionReference;
+                FirestoreRecyclerOptions<TutorialsClass> options = new FirestoreRecyclerOptions.Builder<TutorialsClass>()
+                        .setQuery(query, TutorialsClass.class)
+                        .build();
+                tutorialAdapter = new TutorialHomeTutorAdapter(options);
+                tutorialAdapter.startListening();
+                tutorials_recyclerview.setAdapter(tutorialAdapter);
+                // classitems.addAll(options);
+                tutorialAdapter.notifyDataSetChanged();
+                ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+                itemTouchHelper.attachToRecyclerView(tutorials_recyclerview);
+
+            }
+        }) .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+            }
+        });
+
+
+
+
+
         imageAddLinkMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -162,24 +208,77 @@ public class TutorialsHomeTutor extends AppCompatActivity {
                    */
 
 
-                            DocumentReference documentReference = firestore.collection("users").document(userID)
-                                    .collection("Courses").document(course_title).collection("Batches")
-                                    .document(course_section)
-                                    .collection("Tutorials").document(tutorial_title);
-                            documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+
+
+
+
+
+                            DocumentReference documentReference_for_status = firestore.collection("users").document(userID);
+
+                            documentReference_for_status.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
-                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                    TutorialsClass tutorialsClass = new TutorialsClass(tutorial_title,tutorial_link);
-                                    documentReference.set(tutorialsClass);
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    DocumentSnapshot doc = task.getResult();
+                                    StringBuilder fields = new StringBuilder("");
+                                    status = fields.append(doc.get("choice")).toString();
+
+                                    if(status.equals("Professional teacher / Home tutor")){
+
+                                        DocumentReference documentReference =  firestore.collection("users").document(userID).
+                                                collection("All Files").document(HT).collection("Courses").document(course_title).collection("Batches")
+                                                .document(course_section)
+                                                .collection("Tutorials").document(tutorial_title);
+                                        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                TutorialsClass tutorialsClass = new TutorialsClass(tutorial_title,tutorial_link);
+                                                documentReference.set(tutorialsClass);
                                  /*   tutorials_recyclerview.setAdapter(tutorialAdapter);
                                     tutorialsClassList.add(tutorialsClass);
                                     tutorialAdapter.notifyDataSetChanged();
                                   */  Toast.makeText(getApplicationContext(), "The course is added!", Toast.LENGTH_SHORT).show();
 
+                                            }
+                                        });
+
+                                        dialog.dismiss();
+                                    }
+                                    else if(!(status.equals("Professional teacher / Home tutor"))){
+
+                                        DocumentReference documentReference = firestore.collection("users").document(userID)
+                                                .collection("Courses").document(course_title).collection("Batches")
+                                                .document(course_section)
+                                                .collection("Tutorials").document(tutorial_title);
+                                        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                TutorialsClass tutorialsClass = new TutorialsClass(tutorial_title,tutorial_link);
+                                                documentReference.set(tutorialsClass);
+                                 /*   tutorials_recyclerview.setAdapter(tutorialAdapter);
+                                    tutorialsClassList.add(tutorialsClass);
+                                    tutorialAdapter.notifyDataSetChanged();
+                                  */  Toast.makeText(getApplicationContext(), "The course is added!", Toast.LENGTH_SHORT).show();
+
+                                            }
+                                        });
+
+                                        dialog.dismiss();
+
+                                    }
+
+
+
+
+
+                                }
+                            }) .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
                                 }
                             });
 
-                            dialog.dismiss();
+
+
                         }
 
 
@@ -196,7 +295,7 @@ public class TutorialsHomeTutor extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        tutorialAdapter.startListening();
+
     }
     @Override
     public void onStop() {

@@ -1,6 +1,7 @@
 package com.example.chalkboard_copy;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.text.util.Linkify;
 import android.view.LayoutInflater;
@@ -84,6 +85,19 @@ class NotesHomeTutorAdapter extends FirestoreRecyclerAdapter<NotesClass, NotesHo
             my_note = itemView.findViewById(R.id.mynotes_ht);
             url = itemView.findViewById(R.id.url_tv_ht);
             date = itemView.findViewById(R.id.notes_date_ht);
+            cardView=itemView.findViewById(R.id.note_card_ht);
+
+            cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(),EditNoteHomeTutorActivity.class);
+                    intent.putExtra("title",title);
+                    intent.putExtra("section",section);
+                    intent.putExtra("note_name",note_title.getText());
+                    v.getContext().startActivity(intent);
+                }
+            });
+
            /* itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -112,6 +126,7 @@ class NotesHomeTutorAdapter extends FirestoreRecyclerAdapter<NotesClass, NotesHo
     @Override
     protected void onBindViewHolder(@NonNull NotesHomeTutorViewHolder holder, int position, @NonNull NotesClass model) {
         holder.note_title.setText(model.getNoteTitle());
+        MyNotes_hometutor.setNote_title(model.getNoteTitle());
         holder.note_subtitle.setText(model.getSubtitle());
         holder.my_note.setText(model.getMynote());
         holder.url.setText(model.getUrl());

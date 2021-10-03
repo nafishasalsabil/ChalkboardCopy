@@ -3,6 +3,7 @@ package com.example.chalkboard_copy;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -691,6 +692,7 @@ public class Features extends AppCompatActivity implements GoogleApiClient.OnCon
       //  getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#EFF3FB")));
         getSupportActionBar().setElevation(0);
 
+
         googleSignInClient = GoogleSignIn.getClient(this,GoogleSignInOptions.DEFAULT_SIGN_IN);
         //setSupportActionBar(toolbar1);
      /*   if(getSupportActionBar()!= null)
@@ -768,6 +770,9 @@ public class Features extends AppCompatActivity implements GoogleApiClient.OnCon
                //  fields.append("\nEmail: ").append(doc.get("email"));
                //   fields.append("\nPhone: ").append(doc.get("phone"));
                username.setText(u);
+               getSupportActionBar().setTitle(u+"'s Professional Board");
+               toolbar_features.setTitleTextColor(Color.BLACK);
+
                String link_image = chatUsers.getImageUrl();
                if(!(link_image.equals("not_selected")))
                {

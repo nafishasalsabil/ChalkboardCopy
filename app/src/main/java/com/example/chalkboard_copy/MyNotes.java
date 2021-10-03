@@ -297,38 +297,6 @@ public class MyNotes extends AppCompatActivity {
 
 
 
-       /* collectionReference.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                List<NotesClass> documentData = queryDocumentSnapshots.toObjects(NotesClass.class);
-                 notesAdapter = new NotesAdapter(getApplicationContext(),notesClassList);
-                notes_recyclerview.setAdapter(notesAdapter);
-                notesClassList.addAll(documentData);
-                notesAdapter.setTitle(title);
-                notesAdapter.setSection(sec);
-                notesAdapter.notifyDataSetChanged();
-               *//* for(int i = 0;i<notesClassList.size();i++)
-                {
-                    System.out.println("Hi");
-                    System.out.println(notesClassList.get(i).toString());
-                    if((notesClassList.get(i).toString().equals("No url added")))
-                {
-                    notesAdapter.setState("invisible");
-
-                }
-                else
-                {
-                    notesAdapter.setState("visible");
-
-
-                }
-                    notesAdapter.notifyDataSetChanged();
-                }
-*//*
-
-            }
-        });
-*/
         ImageView imageAddNoteMain = findViewById(R.id.addnotes);
         imageAddNoteMain.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -359,51 +327,7 @@ public class MyNotes extends AppCompatActivity {
         notesAdapter.filterlist(filteredlist);
 
 
-   /*     CollectionReference collectionReference =  firestore.collection("users").document(userID)
-                .collection("Courses").document(title)
-                .collection("Sections").document(sec).collection("MyNotes");
-        Query query = collectionReference.orderBy("search").startAt(toLowerCase).endAt(toLowerCase+"\uf0ff");
-        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
 
-                notesClassList.clear();
-
-                for(QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots)
-                {
-                    NotesClass notesClass = documentSnapshot.toObject(NotesClass.class);
-                    assert notesClass!=null;
-                    assert firebaseUser!=null;
-                    if(notesClass.getNoteTitle()!=null)// && notesClass.getNoteTitle().equals())
-                    {
-                        notesClassList.add(notesClass);
-                        System.out.println(notesClass);
-                        System.out.println("hello" + notesClass.getNoteTitle());
-
-                    }
-                    else
-                    {
-
-                        System.out.println("edrftgyhujikl");
-                    }
-                *//*   chatUsers.add(chatUser);
-                   System.out.println(chatUsers);
-                   System.out.println(chatUser.getid());
-                    chatUserAdapter = new ChatUserAdapter(getContext(),chatUsers);
-                    users_recycler_view.setAdapter(chatUserAdapter);
-                    chatUserAdapter.notifyDataSetChanged();
-              *//* }
-
-                notesAdapter.startListening();
-                notes_recyclerview.setAdapter(notesAdapter);
-                notesAdapter.notifyDataSetChanged();
-
-           *//*    classAdapter = new ClassAdapter(getApplicationContext(), classitems);
-               List<CourseInfo> documentData = queryDocumentSnapshots.toObjects(CourseInfo.class);
-*//*
-            }
-
-        });*/
     }
     @Override
     public void onStart() {
@@ -530,26 +454,6 @@ public class MyNotes extends AppCompatActivity {
 
             }
 
-           /* int position = viewHolder.getAdapterPosition();
-            switch(direction)
-            {
-                case ItemTouchHelper.LEFT:
-                    String course_name = classitems.get(position).getCourseTitle();
-                    archive.add(course_name);
-                    classitems.remove(position);
-                    classAdapter.notifyItemRemoved(position);
-                    Snackbar.make(recyclerView,course_name+" Archived", Snackbar.LENGTH_LONG)
-                           *//* .setAction("Undo", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    archive.remove(archive.lastIndexOf(course_name));
-                                    classitems.;
-                                }
-                            }).show()*//*;
-
-
-            }
-*/
 
         }
 

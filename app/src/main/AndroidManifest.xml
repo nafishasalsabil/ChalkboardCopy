@@ -52,6 +52,7 @@
         <activity android:name=".Add_New_class_HomeTutor" />
         <activity android:name=".Tutorials" />
         <activity android:name=".EditNoteActivity" />
+        <activity android:name=".EditNoteHomeTutorActivity" />
         <activity android:name=".ClassPerformance" />
         <activity android:name=".MainActivity_HomeTutor" />
 

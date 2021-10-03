@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -37,6 +38,9 @@ class NoticeboardAdapter extends RecyclerView.Adapter<NoticeboardAdapter.Noticeb
     DocumentReference documentReference;
     public static String sec = "",title = "";
     int count = 0;
+    int likes = 0;
+    final boolean liked=false;
+    public String userId_username="";
 
     public String getSec() {
         return sec;
@@ -124,18 +128,21 @@ class NoticeboardAdapter extends RecyclerView.Adapter<NoticeboardAdapter.Noticeb
         holder.like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(count==0)
+                likes = quizitems.get(position).getLike();
+                count++;
+                if(count%2!=0)
                 {
-                    count = 1;
+
+                    likes++;
                     DocumentReference documentReference1 = firestore.collection("Notices").document(quizitems.get(position).getTitle());
                     documentReference1.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                         @Override
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
                             NoticeClass noticeClass = documentSnapshot.toObject(NoticeClass.class);
                             Map<String,Object> user = new HashMap<>();
-                            user.put("like",quizitems.get(position).getLike()+1);
+                            user.put("like",likes);
                             documentReference1.update(user);
-                            holder.likes.setText(Integer.toString(quizitems.get(position).getLike()+1));
+                            holder.likes.setText(Integer.toString(likes));
 
 
                         }
@@ -155,11 +162,23 @@ class NoticeboardAdapter extends RecyclerView.Adapter<NoticeboardAdapter.Noticeb
         holder.contact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String un = quizitems.get(position).getName();
+                DocumentReference documentReference = firestore.collection("users").document(userID);
+                documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        userId_username = documentSnapshot.getString("username");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
+                String un = quizitems.get(position).getId();
                 System.out.println(un);
                 if(un.equals(userID))
                 {
-                    Toast.makeText(v.getContext(),"This is your own post!",Toast.LENGTH_SHORT);
+                    Toast.makeText(v.getContext(),"This is your own post!",Toast.LENGTH_SHORT).show();
                     System.out.println("This is your own post!");
                 }
                 else

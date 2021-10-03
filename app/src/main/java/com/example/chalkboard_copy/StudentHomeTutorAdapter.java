@@ -16,10 +16,16 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,7 +56,9 @@ class StudentHomeTutorAdapter extends BaseAdapter {
 
     SparseBooleanArray statusOfAbsent = new SparseBooleanArray();
     SparseBooleanArray statusOfLate = new SparseBooleanArray();
-
+    public static String status_profession = "";
+    public final String PROF="Professional Account";
+    public final String HT="Tutor Account";
     public static final String TAG = "check";
     String title,sec,lec;
 
@@ -196,15 +204,57 @@ class StudentHomeTutorAdapter extends BaseAdapter {
                     studentItems.get(position).setStatus(status);
                     statusOfPresent.put(position, true);
                     radioButtonPresent.setChecked(true);
-                    documentReference = firestore.collection("users").document(userID)
-                            .collection("Courses").document(title).collection("Batches").document(sec)
-                            .collection("Attendance").document(Lecture_s_ht).collection("Status").document(Integer.toString(studentItems.get(position).getId()));
-                    Map<String, Object> inuser = new HashMap<>();
-                    inuser.put("id", studentItems.get(position).getId());
-                    inuser.put("name", studentItems.get(position).getName());
-                    inuser.put("status", status);
 
-                    documentReference.set(inuser);
+                    DocumentReference documentReference_for_status = firestore.collection("users").document(userID);
+
+                    documentReference_for_status.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            DocumentSnapshot doc = task.getResult();
+                            StringBuilder fields = new StringBuilder("");
+                            status_profession = fields.append(doc.get("choice")).toString();
+
+                            if(status_profession.equals("Professional teacher / Home tutor")){
+                                documentReference = firestore.collection("users")
+                                        .document(userID).collection("All Files")
+                                        .document(HT).collection("Courses").document(title).collection("Batches").document(sec)
+                                        .collection("Attendance").document(Lecture_s_ht).collection("Status").document(Integer.toString(studentItems.get(position).getId()));
+                                Map<String, Object> inuser = new HashMap<>();
+                                inuser.put("id", studentItems.get(position).getId());
+                                inuser.put("name", studentItems.get(position).getName());
+                                inuser.put("status", status);
+
+                                documentReference.set(inuser);
+
+                            }
+                            else if(!(status_profession.equals("Professional teacher / Home tutor"))){
+                                documentReference = firestore.collection("users").document(userID)
+                                        .collection("Courses").document(title).collection("Batches").document(sec)
+                                        .collection("Attendance").document(Lecture_s_ht).collection("Status").document(Integer.toString(studentItems.get(position).getId()));
+                                Map<String, Object> inuser = new HashMap<>();
+                                inuser.put("id", studentItems.get(position).getId());
+                                inuser.put("name", studentItems.get(position).getName());
+                                inuser.put("status", status);
+
+                                documentReference.set(inuser);
+
+
+                            }
+
+
+
+
+
+                        }
+                    }) .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                        }
+                    });
+
+
+
+
 
                 } else if (checkedItem == R.id.radioButton_abs_ht) {
                     status = ABS_TEXT;
@@ -222,15 +272,53 @@ class StudentHomeTutorAdapter extends BaseAdapter {
                     statusOfAbsent.put(position, true);
                     radioButtonAbs.setChecked(true);
 
-                    documentReference = firestore.collection("users").document(userID)
-                            .collection("Courses").document(title).collection("Batches").document(sec)
-                            .collection("Attendance").document(Lecture_s_ht).collection("Status").document(Integer.toString(studentItems.get(position).getId()));
-                    Map<String, Object> inuser = new HashMap<>();
-                    inuser.put("id", studentItems.get(position).getId());
-                    inuser.put("name", studentItems.get(position).getName());
-                    inuser.put("status", status);
+                    DocumentReference documentReference_for_status = firestore.collection("users").document(userID);
 
-                    documentReference.set(inuser);
+                    documentReference_for_status.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            DocumentSnapshot doc = task.getResult();
+                            StringBuilder fields = new StringBuilder("");
+                            status_profession = fields.append(doc.get("choice")).toString();
+
+                            if(status_profession.equals("Professional teacher / Home tutor")){
+                                documentReference = firestore.collection("users")
+                                        .document(userID).collection("All Files")
+                                        .document(HT).collection("Courses").document(title).collection("Batches").document(sec)
+                                        .collection("Attendance").document(Lecture_s_ht).collection("Status").document(Integer.toString(studentItems.get(position).getId()));
+                                Map<String, Object> inuser = new HashMap<>();
+                                inuser.put("id", studentItems.get(position).getId());
+                                inuser.put("name", studentItems.get(position).getName());
+                                inuser.put("status", status);
+
+                                documentReference.set(inuser);
+
+                            }
+                            else if(!(status_profession.equals("Professional teacher / Home tutor"))){
+                                documentReference = firestore.collection("users").document(userID)
+                                        .collection("Courses").document(title).collection("Batches").document(sec)
+                                        .collection("Attendance").document(Lecture_s_ht).collection("Status").document(Integer.toString(studentItems.get(position).getId()));
+                                Map<String, Object> inuser = new HashMap<>();
+                                inuser.put("id", studentItems.get(position).getId());
+                                inuser.put("name", studentItems.get(position).getName());
+                                inuser.put("status", status);
+
+                                documentReference.set(inuser);
+
+                            }
+
+
+
+
+                        }
+                    }) .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                        }
+                    });
+
+
+
                 } else if (checkedItem == R.id.radioButton_late_ht) {
                     status = LATE_TEXT;
 
@@ -246,16 +334,53 @@ class StudentHomeTutorAdapter extends BaseAdapter {
                     studentItems.get(position).setStatus(status);
                     statusOfLate.put(position, true);
                     radioButtonLate.setChecked(true);
-                     documentReference = firestore.collection("users").document(userID)
-                            .collection("Courses").document(title).collection("Batches").document(sec)
-                            .collection("Attendance").document(Lecture_s_ht).collection("Status").document(Integer.toString(studentItems.get(position).getId()));
-                    Map<String, Object> inuser = new HashMap<>();
-                    inuser.put("id", studentItems.get(position).getId());
-                    inuser.put("name", studentItems.get(position).getName());
-                    inuser.put("status", status);
+
+                    DocumentReference documentReference_for_status = firestore.collection("users").document(userID);
+
+                    documentReference_for_status.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            DocumentSnapshot doc = task.getResult();
+                            StringBuilder fields = new StringBuilder("");
+                            status_profession = fields.append(doc.get("choice")).toString();
+
+                            if(status_profession.equals("Professional teacher / Home tutor")){
+                                documentReference = firestore.collection("users")
+                                        .document(userID).collection("All Files")
+                                        .document(HT).collection("Courses").document(title).collection("Batches").document(sec)
+                                        .collection("Attendance").document(Lecture_s_ht).collection("Status").document(Integer.toString(studentItems.get(position).getId()));
+                                Map<String, Object> inuser = new HashMap<>();
+                                inuser.put("id", studentItems.get(position).getId());
+                                inuser.put("name", studentItems.get(position).getName());
+                                inuser.put("status", status);
 
 
-                    documentReference.update(inuser);
+                                documentReference.update(inuser);
+
+                            }
+                            else if(!(status_profession.equals("Professional teacher / Home tutor"))){
+                                documentReference = firestore.collection("users").document(userID)
+                                        .collection("Courses").document(title).collection("Batches").document(sec)
+                                        .collection("Attendance").document(Lecture_s_ht).collection("Status").document(Integer.toString(studentItems.get(position).getId()));
+                                Map<String, Object> inuser = new HashMap<>();
+                                inuser.put("id", studentItems.get(position).getId());
+                                inuser.put("name", studentItems.get(position).getName());
+                                inuser.put("status", status);
+
+
+                                documentReference.update(inuser);
+
+                            }
+
+
+                        }
+                    }) .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                        }
+                    });
+
+
                 }
 //                notifyDataSetChanged();
             }

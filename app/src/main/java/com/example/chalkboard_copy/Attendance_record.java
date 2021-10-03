@@ -93,11 +93,7 @@ public class Attendance_record extends AppCompatActivity {
                             attendanceRecordAdapter.setTitle(title);
                             attendanceRecordAdapter.setSection(section);
                             attendanceRecordAdapter.notifyDataSetChanged();
-                /*for(int i = 0;i<studentItems.size();i++)
-                {
-                  //  System.out.println(studentItems.get(i).toString());
-                }
-*/
+
                         }
                     });
 

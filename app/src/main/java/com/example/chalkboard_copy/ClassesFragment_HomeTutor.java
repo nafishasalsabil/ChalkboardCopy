@@ -23,12 +23,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -48,6 +52,9 @@ public class ClassesFragment_HomeTutor extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     List<CourseInfoHomeTutorClass> courseInfoHomeTutorClassList = new ArrayList<>();
     CollectionReference collectionReference;
+    public static String status = "";
+    public final String PROF="Professional Account";
+    public final String HT="Tutor Account";
 
     @Nullable
     @Override
@@ -59,20 +66,62 @@ public class ClassesFragment_HomeTutor extends Fragment {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        collectionReference = firestore.collection("users").document(userID).collection("Courses");
+
+        DocumentReference documentReference_for_status = firestore.collection("users").document(userID);
+
+        documentReference_for_status.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot doc = task.getResult();
+                StringBuilder fields = new StringBuilder("");
+                status = fields.append(doc.get("choice")).toString();
+                System.out.println(status);
+            }
+        }) .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+            }
+        });
+
+        if(status.equals("Professional teacher / Home tutor")){
+
+            collectionReference = firestore.collection("users")
+                    .document(userID).collection("All Files").document(HT).collection("Courses");
+            Query query = collectionReference;
+            FirestoreRecyclerOptions<CourseInfoHomeTutorClass> options = new FirestoreRecyclerOptions.Builder<CourseInfoHomeTutorClass>()
+                    .setQuery(query, CourseInfoHomeTutorClass.class)
+                    .build();
+            homeTutorClassAdapter = new HomeTutorClassAdapter(options);
+            recyclerView.setAdapter(homeTutorClassAdapter);
+            // classitems.addAll(options);
+            homeTutorClassAdapter.notifyDataSetChanged();
+            t1.setVisibility(View.GONE);
+            t2.setVisibility(View.GONE);
+            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+            itemTouchHelper.attachToRecyclerView(recyclerView);
+
+        }
+        else{
+
+            collectionReference = firestore.collection("users").document(userID).collection("Courses");
+            Query query = collectionReference;
+            FirestoreRecyclerOptions<CourseInfoHomeTutorClass> options = new FirestoreRecyclerOptions.Builder<CourseInfoHomeTutorClass>()
+                    .setQuery(query, CourseInfoHomeTutorClass.class)
+                    .build();
+            homeTutorClassAdapter = new HomeTutorClassAdapter(options);
+            recyclerView.setAdapter(homeTutorClassAdapter);
+            // classitems.addAll(options);
+            homeTutorClassAdapter.notifyDataSetChanged();
+            t1.setVisibility(View.GONE);
+            t2.setVisibility(View.GONE);
+            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+            itemTouchHelper.attachToRecyclerView(recyclerView);
+        }
+
+
+
         //  List<CourseInfo> documentData = queryDocumentSnapshots.toObjects(CourseInfo.class);
-        Query query = collectionReference;
-        FirestoreRecyclerOptions<CourseInfoHomeTutorClass> options = new FirestoreRecyclerOptions.Builder<CourseInfoHomeTutorClass>()
-                .setQuery(query, CourseInfoHomeTutorClass.class)
-                .build();
-        homeTutorClassAdapter = new HomeTutorClassAdapter(options);
-        recyclerView.setAdapter(homeTutorClassAdapter);
-        // classitems.addAll(options);
-        homeTutorClassAdapter.notifyDataSetChanged();
-        t1.setVisibility(View.GONE);
-        t2.setVisibility(View.GONE);
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
+
         /*if (homeTutorClassAdapter.getItemCount() == 0) {
 
             t1.setVisibility(View.VISIBLE);
@@ -124,15 +173,56 @@ public class ClassesFragment_HomeTutor extends Fragment {
                             className.setError("required");
                             return;
                         }
-                        DocumentReference documentReference = firestore.collection("users").document(userID).collection("Courses").document(coursename);
-                       CourseInfoHomeTutorClass courseInfoHomeTutorClass = new CourseInfoHomeTutorClass(coursename,classname);
-                        documentReference.set(courseInfoHomeTutorClass).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Toast.makeText(getContext(), "The course is added!", Toast.LENGTH_SHORT).show();
 
+                        DocumentReference documentReference_for_status = firestore.collection("users").document(userID);
+
+                        documentReference_for_status.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                DocumentSnapshot doc = task.getResult();
+                                StringBuilder fields = new StringBuilder("");
+                                status = fields.append(doc.get("choice")).toString();
+                                System.out.println(status);
+                            }
+                        }) .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
                             }
                         });
+
+                        if(status.equals("Professional teacher / Home tutor")){
+
+
+
+                            DocumentReference documentReference = firestore.collection("users")
+                                    .document(userID).collection("All Files").document(HT).collection("Courses").document(coursename);
+                            CourseInfoHomeTutorClass courseInfoHomeTutorClass = new CourseInfoHomeTutorClass(coursename,classname);
+                            documentReference.set(courseInfoHomeTutorClass).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(getContext(), "The course is added!", Toast.LENGTH_SHORT).show();
+
+                                }
+                            });
+
+                        }
+                        else{
+
+                            DocumentReference documentReference = firestore.collection("users").document(userID)
+                                    .collection("Courses").document(coursename);
+                            CourseInfoHomeTutorClass courseInfoHomeTutorClass = new CourseInfoHomeTutorClass(coursename,classname);
+                            documentReference.set(courseInfoHomeTutorClass).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(getContext(), "The course is added!", Toast.LENGTH_SHORT).show();
+
+                                }
+                            });
+                        }
+
+
+
+
                         dialog.dismiss();
 
 
@@ -169,26 +259,7 @@ public class ClassesFragment_HomeTutor extends Fragment {
 
             }
 
-           /* int position = viewHolder.getAdapterPosition();
-            switch(direction)
-            {
-                case ItemTouchHelper.LEFT:
-                    String course_name = classitems.get(position).getCourseTitle();
-                    archive.add(course_name);
-                    classitems.remove(position);
-                    classAdapter.notifyItemRemoved(position);
-                    Snackbar.make(recyclerView,course_name+" Archived", Snackbar.LENGTH_LONG)
-                           *//* .setAction("Undo", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    archive.remove(archive.lastIndexOf(course_name));
-                                    classitems.;
-                                }
-                            }).show()*//*;
 
-
-            }
-*/
 
         }
 

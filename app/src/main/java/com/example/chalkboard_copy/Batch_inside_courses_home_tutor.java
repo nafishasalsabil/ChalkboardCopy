@@ -23,11 +23,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -49,6 +53,13 @@ public class Batch_inside_courses_home_tutor extends AppCompatActivity {
     public static String title  = "";
     List<BatchClass> batchClassList = new ArrayList<>();
     Toolbar batch_toolbar;
+    public static String status = "";
+    public final String PROF="Professional Account";
+    public final String HT="Tutor Account";
+    CollectionReference collectionReference;
+    public static String title1  = "";
+    public static String sec  = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +71,8 @@ public class Batch_inside_courses_home_tutor extends AppCompatActivity {
         t1 = findViewById(R.id.abh12);
         //    getSupportActionBar().setDisplayShowHomeEnabled(true);
         batch_toolbar.setNavigationIcon(R.drawable.ic_back);
+        getSupportActionBar().setTitle("Batches");
+        batch_toolbar.setTitleTextColor(Color.BLACK);
         batch_toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,42 +84,75 @@ public class Batch_inside_courses_home_tutor extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         Intent intent = getIntent();
-        title = intent.getStringExtra("className");
-        CollectionReference collectionReference = firestore.collection("users")
-                .document(userID).collection("Courses").document(title).collection("Batches");
-        Query query = collectionReference;
-        FirestoreRecyclerOptions<BatchClass> options = new FirestoreRecyclerOptions.Builder<BatchClass>()
-                .setQuery(query, BatchClass.class)
-                .build();
-        batchAdapter = new BatchAdapter(options);
-        recyclerView.setAdapter(batchAdapter);
-        batchAdapter.setTitle(title);
-        batchAdapter.notifyDataSetChanged();
-        t1.setVisibility(View.GONE);
+        title = intent.getStringExtra("title");
+
+        System.out.println(title);
 
 
+        DocumentReference documentReference_for_status = firestore.collection("users").document(userID);
 
-
-       /* collectionReference.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        documentReference_for_status.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                List<BatchClass> documentData = queryDocumentSnapshots.toObjects(BatchClass.class);
-                batchAdapter = new BatchAdapter(o);
-                recyclerView.setAdapter(batchAdapter);
-                batchClassList.addAll(documentData);
-                batchAdapter.notifyDataSetChanged();
-                t1.setVisibility(View.GONE);
-                //    System.out.println();
-               *//* classAdapter.setOnItemClickListener(new ClassAdapter.OnItemClickListener() {
-                    @Override
-                    public void onClick(int position) {
-                        gotoinsideclass(position);
-                    }
-                });*//*
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot doc = task.getResult();
+                StringBuilder fields = new StringBuilder("");
+                status = fields.append(doc.get("choice")).toString();
+
+                if(status.equals("Professional teacher / Home tutor")){
+
+
+
+                    CollectionReference collectionReference = firestore.collection("users")
+                            .document(userID).collection("All Files")
+                            .document(HT).collection("Courses").document(title).collection("Batches");
+                    Query query = collectionReference;
+                    FirestoreRecyclerOptions<BatchClass> options = new FirestoreRecyclerOptions.Builder<BatchClass>()
+                            .setQuery(query, BatchClass.class)
+                            .build();
+                    batchAdapter = new BatchAdapter(options);
+                    batchAdapter.startListening();
+                    recyclerView.setAdapter(batchAdapter);
+                    batchAdapter.setTitle(title);
+                    batchAdapter.notifyDataSetChanged();
+                    t1.setVisibility(View.GONE);
+
+
+                }
+                else if(!(status.equals("Professional teacher / Home tutor"))){
+                    CollectionReference collectionReference = firestore.collection("users")
+                            .document(userID).collection("Courses").document(title).collection("Batches");
+                    Query query = collectionReference;
+                    FirestoreRecyclerOptions<BatchClass> options = new FirestoreRecyclerOptions.Builder<BatchClass>()
+                            .setQuery(query, BatchClass.class)
+                            .build();
+                    batchAdapter = new BatchAdapter(options);
+                    batchAdapter.startListening();
+                    recyclerView.setAdapter(batchAdapter);
+                    batchAdapter.setTitle(title);
+                    batchAdapter.notifyDataSetChanged();
+                    t1.setVisibility(View.GONE);
+
+
+
+                }
+
 
 
             }
-        });*/
+        }) .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+            }
+        });
+
+
+
+
+
+
+
+
+
         FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.add_batches_fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,7 +171,7 @@ public class Batch_inside_courses_home_tutor extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        batchAdapter.startListening();
+
     }
     @Override
     public void onStop() {
@@ -216,16 +262,59 @@ public class Batch_inside_courses_home_tutor extends AppCompatActivity {
                 else
                 {
                     System.out.println(title);
-                    DocumentReference documentReference = firestore.collection("users").document(userID)
-                            .collection("Courses").document(title).collection("Batches").document(b_name);
 
-                    BatchClass batchClass = new BatchClass(b_name,b_no_of_days,b_days,b_time,b_payment);
-                    documentReference.set(batchClass).addOnSuccessListener(new OnSuccessListener<Void>() {
+
+
+                    DocumentReference documentReference_for_status = firestore.collection("users").document(userID);
+
+                    documentReference_for_status.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
-                        public void onSuccess(Void aVoid) {
-                            Toast.makeText(getApplicationContext(),"Batch is added!",Toast.LENGTH_SHORT);
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            DocumentSnapshot doc = task.getResult();
+                            StringBuilder fields = new StringBuilder("");
+                            status = fields.append(doc.get("choice")).toString();
+
+                            if(status.equals("Professional teacher / Home tutor")){
+                                DocumentReference documentReference =firestore.collection("users")
+                                        .document(userID).collection("All Files")
+                                        .document(HT).collection("Courses").document(title).collection("Batches").document(b_name);
+
+                                BatchClass batchClass = new BatchClass(b_name,b_no_of_days,b_days,b_time,b_payment);
+                                documentReference.set(batchClass).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(getApplicationContext(),"Batch is added!",Toast.LENGTH_SHORT);
+                                    }
+                                });
+
+                            }
+                            else if(!(status.equals("Professional teacher / Home tutor"))){
+
+                                DocumentReference documentReference = firestore.collection("users").document(userID)
+                                        .collection("Courses").document(title).collection("Batches").document(b_name);
+
+                                BatchClass batchClass = new BatchClass(b_name,b_no_of_days,b_days,b_time,b_payment);
+                                documentReference.set(batchClass).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(getApplicationContext(),"Batch is added!",Toast.LENGTH_SHORT);
+                                    }
+                                });
+
+
+                            }
+                        }
+                    }) .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
                         }
                     });
+
+
+
+
+
+
 
                     dialog.dismiss();
                 }

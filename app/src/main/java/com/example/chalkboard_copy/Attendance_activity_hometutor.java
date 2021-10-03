@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -19,8 +20,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -70,7 +73,9 @@ public class Attendance_activity_hometutor extends AppCompatActivity {
     // Lecture object = new Lecture();
     StudentItems studentItems_object = new StudentItems();
     CourseInfo courseInfo = new CourseInfo();
-
+    public static String status = "";
+    public final String PROF="Professional Account";
+    public final String HT="Tutor Account";
     Toolbar toolbar_attendance;
     File myExternalFile;
     String myData = "";
@@ -91,6 +96,8 @@ public class Attendance_activity_hometutor extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar_attendance.setNavigationIcon(R.drawable.ic_back);
         getSupportActionBar().setElevation(0);
+        toolbar_attendance.setTitle("Attendance");
+        toolbar_attendance.setTitleTextColor(Color.BLACK);
         toolbar_attendance.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,49 +124,130 @@ public class Attendance_activity_hometutor extends AppCompatActivity {
         //   recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         //   recyclerView.setLayoutManager(layoutManager);
-        DocumentReference retrievesection = firestore.collection("users")
-                .document(userID).collection("Courses").document(clicked_courseTitle_ht);
 
-        retrievesection.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+
+
+
+
+
+
+        DocumentReference documentReference_for_status = firestore.collection("users").document(userID);
+
+        documentReference_for_status.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {
-                    String k = documentSnapshot.getString("section");
-                    courseInfo.setSection(k);
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot doc = task.getResult();
+                StringBuilder fields = new StringBuilder("");
+                status = fields.append(doc.get("choice")).toString();
+                System.out.println(status+"___________Loading?");
+                System.out.println(status+" Check");
+                if(status.equals("Professional teacher / Home tutor")){
+
+                    DocumentReference retrievesection = firestore.collection("users")
+                            .document(userID).collection("All Files").document(HT)
+                            .collection("Courses").document(clicked_courseTitle_ht);
+
+                    retrievesection.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            if (documentSnapshot.exists()) {
+                                String k = documentSnapshot.getString("batchName");
+                                courseInfo.setSection(k);
+                            }
+                        }
+                    })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                }
+                            });
+
+                    System.out.println("Working??????????????????????????");
+
+                    studentcollection = firestore.collection("users")
+                            .document(userID).collection("All Files").document(HT)
+                            .collection("Courses").document(clicked_courseTitle_ht).collection("Batches")
+                            .document(clicked_course_section_ht)
+                            .collection("Students");
+                    studentcollection.orderBy("id", Query.Direction.ASCENDING).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            List<StudentItems> documentData = queryDocumentSnapshots.toObjects(StudentItems.class);
+                            studentAdapter = new StudentHomeTutorAdapter(getApplicationContext(), studentItems);
+                            listView.setAdapter(studentAdapter);
+                            studentItems.addAll(documentData);
+                            detect1 = "make_invisible";
+                            //   studentAdapter.setUi(detect1);
+                            studentAdapter.setTitle(clicked_courseTitle_ht);
+                            studentAdapter.setSec(clicked_course_section_ht);
+                            studentAdapter.notifyDataSetChanged();
+                            t1.setVisibility(View.GONE);
+                            t2.setVisibility(View.GONE);
+                            for (int i = 0; i < studentItems.size(); i++) {
+                                System.out.println(studentItems.get(i).toString());
+                            }
+
+                        }
+                    });
+
                 }
+                else if(!(status.equals("Professional teacher / Home tutor"))){
+
+                    DocumentReference retrievesection = firestore.collection("users")
+                            .document(userID).collection("Courses").document(clicked_courseTitle_ht);
+
+                    retrievesection.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            if (documentSnapshot.exists()) {
+                                String k = documentSnapshot.getString("batchName");
+                                courseInfo.setSection(k);
+                            }
+                        }
+                    })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                }
+                            });
+                    System.out.println("Not Working??????????????????????????");
+
+                    studentcollection = firestore.collection("users").document(userID)
+                            .collection("Courses").document(clicked_courseTitle_ht).collection("Batches")
+                            .document(clicked_course_section_ht)
+                            .collection("Students");
+                    studentcollection.orderBy("id", Query.Direction.ASCENDING).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            List<StudentItems> documentData = queryDocumentSnapshots.toObjects(StudentItems.class);
+                            studentAdapter = new StudentHomeTutorAdapter(getApplicationContext(), studentItems);
+                            listView.setAdapter(studentAdapter);
+                            studentItems.addAll(documentData);
+                            detect1 = "make_invisible";
+                            //   studentAdapter.setUi(detect1);
+                            studentAdapter.setTitle(clicked_courseTitle_ht);
+                            studentAdapter.setSec(clicked_course_section_ht);
+                            studentAdapter.notifyDataSetChanged();
+                            t1.setVisibility(View.GONE);
+                            t2.setVisibility(View.GONE);
+                            for (int i = 0; i < studentItems.size(); i++) {
+                                System.out.println(studentItems.get(i).toString());
+                            }
+
+                        }
+                    });
+
+
+                }
+
+
             }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                    }
-                });
-
-
-           studentcollection = firestore.collection("users").document(userID)
-                .collection("Courses").document(clicked_courseTitle_ht).collection("Batches")
-                .document(clicked_course_section_ht)
-                .collection("Students");
-        studentcollection.orderBy("id", Query.Direction.ASCENDING).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        }) .addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                List<StudentItems> documentData = queryDocumentSnapshots.toObjects(StudentItems.class);
-                studentAdapter = new StudentHomeTutorAdapter(getApplicationContext(), studentItems);
-                listView.setAdapter(studentAdapter);
-                studentItems.addAll(documentData);
-                detect1 = "make_invisible";
-                //   studentAdapter.setUi(detect1);
-                studentAdapter.setTitle(clicked_courseTitle_ht);
-                studentAdapter.setSec(clicked_course_section_ht);
-                studentAdapter.notifyDataSetChanged();
-                t1.setVisibility(View.GONE);
-                t2.setVisibility(View.GONE);
-                for (int i = 0; i < studentItems.size(); i++) {
-                    System.out.println(studentItems.get(i).toString());
-                }
-
+            public void onFailure(@NonNull Exception e) {
             }
         });
+
 
 
         b.setOnClickListener(new View.OnClickListener() {

@@ -134,27 +134,25 @@ public class CreateNoteActivity extends AppCompatActivity {
 
                 System.out.println(input_note);
 
-               // inputNoteText.setText(inputNoteText + "" + url);
+
 
                 System.out.println(url);
 
                 if(TextUtils.isEmpty(url))
                 {
                     input_url.setError("url is required");
-                  //  Toast.makeText(getApplicationContext(),"Empty!",Toast.LENGTH_LONG);
+
                 }
                 else if(!Patterns.WEB_URL.matcher(input_url.getText().toString()).matches())
                 {
-                  //  Toast.makeText(getApplicationContext(),"Enter valid url!",Toast.LENGTH_LONG);
+
                     input_url.setError("Enter valid url!");
 
 
                 }
                 else
                 {
-                   /* String u = inputNoteText.getText().toString() + " " + input_url.getText().toString();
-                    inputNoteText.setText(u);
-                   */
+
                    url_text.setVisibility(View.VISIBLE);
                    url_text.setText(url);
                     Linkify.addLinks(url_text, Linkify.WEB_URLS);
@@ -260,11 +258,6 @@ public class CreateNoteActivity extends AppCompatActivity {
 
 
         }
-        //ekhane hobe kaaj wait
 
-       /* final ContactsContract.CommonDataKinds.Note note = new ContactsContract.CommonDataKinds.Note();
-        note.setTitle(inputNoteTitle.getText().toString());
-
-*/
     }
 }

@@ -24,6 +24,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -31,6 +33,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -53,12 +56,14 @@ public class ExamQuestionHomeTutor extends AppCompatActivity {
     FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     String userID = firebaseAuth.getCurrentUser().getUid();
-
+    public static String status = "";
+    public final String PROF="Professional Account";
+    public final String HT="Tutor Account";
     public String section = "";
     public String title = "";
     public String pdf = "";
     public ArrayAdapter<String> adapter;
-
+    CollectionReference collectionReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +78,8 @@ public class ExamQuestionHomeTutor extends AppCompatActivity {
         setSupportActionBar(exam_toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         exam_toolbar.setNavigationIcon(R.drawable.ic_back);
+        getSupportActionBar().setTitle("Exam Questions");
+        exam_toolbar.setTitleTextColor(Color.BLACK);
         exam_toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,37 +141,78 @@ public class ExamQuestionHomeTutor extends AppCompatActivity {
 
     }
     private void viewAllFiles() {
-        CollectionReference collectionReference = firestore.collection("users").document(userID)
-                .collection("Courses").document(title).collection("Batches")
-                .document(section)
-                .collection("Exam_questions");
-        collectionReference.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+
+
+
+        DocumentReference documentReference_for_status = firestore.collection("users").document(userID);
+
+        documentReference_for_status.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                List<UploadPDFClass> documentData = queryDocumentSnapshots.toObjects(UploadPDFClass.class);
-                uploadPDFClassList.clear();
-                uploadPDFClassList.addAll(documentData);
-                String[] uploads = new String[uploadPDFClassList.size()];
-                for (int i = 0; i < uploads.length; i++) {
-                    uploads[i] = uploadPDFClassList.get(i).getPdf_name();
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot doc = task.getResult();
+                StringBuilder fields = new StringBuilder("");
+                status = fields.append(doc.get("choice")).toString();
+
+                if(status.equals("Professional teacher / Home tutor")){
+
+                    collectionReference = firestore.collection("users").document(userID)
+                            .collection("All Files").document(HT)
+                            .collection("Courses").document(title).collection("Batches")
+                            .document(section)
+                            .collection("Exam_questions");
+
+
+                }
+                else if(!(status.equals("Professional teacher / Home tutor"))){
+                    collectionReference = firestore.collection("users").document(userID)
+                            .collection("Courses").document(title).collection("Batches")
+                            .document(section)
+                            .collection("Exam_questions");
+
+
                 }
 
 
-                adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.exam_question_item_hometutor, R.id.pdf_name_exam_ht, uploads) {
-                    @NonNull
+
+
+                collectionReference.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
-                    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        List<UploadPDFClass> documentData = queryDocumentSnapshots.toObjects(UploadPDFClass.class);
+                        uploadPDFClassList.clear();
+                        uploadPDFClassList.addAll(documentData);
+                        String[] uploads = new String[uploadPDFClassList.size()];
+                        for (int i = 0; i < uploads.length; i++) {
+                            uploads[i] = uploadPDFClassList.get(i).getPdf_name();
+                        }
 
-                        View view = super.getView(position, convertView, parent);
-                        return view;
+
+                        adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.exam_question_item_hometutor, R.id.pdf_name_exam_ht, uploads) {
+                            @NonNull
+                            @Override
+                            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+
+                                View view = super.getView(position, convertView, parent);
+                                return view;
+                            }
+                        };
+                        myexampdfListView.setAdapter(adapter);
+                        adapter.notifyDataSetChanged();
+
+
                     }
-                };
-                myexampdfListView.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
-
+                });
 
             }
+        }) .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+            }
         });
+
+
+
+
     }
     private void selectPDF() {
         Intent intent = new Intent();
@@ -202,20 +250,67 @@ public class ExamQuestionHomeTutor extends AppCompatActivity {
 
 
                 Log.d("checked","at data changed"+uploadPDFClassList.size());
-                documentReference = firestore.collection("users").document(userID)
-                        .collection("Courses").document(title)
-                        .collection("Batches").document(section)
-                        .collection("Exam_questions").document(pdf);
-                documentReference.set(uploadPDFClass).addOnSuccessListener(new OnSuccessListener<Void>() {
+
+                DocumentReference documentReference_for_status = firestore.collection("users").document(userID);
+
+                documentReference_for_status.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(getApplicationContext(), "The pdf is added!", Toast.LENGTH_SHORT).show();
-                        progressDialog.dismiss();
-                        viewAllFiles();
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot doc = task.getResult();
+                        StringBuilder fields = new StringBuilder("");
+                        status = fields.append(doc.get("choice")).toString();
+
+                        if(status.equals("Professional teacher / Home tutor")){
+
+                            documentReference =  firestore.collection("users").document(userID)
+                                    .collection("All Files")
+                                    .document(HT)
+                                    .collection("Courses").document(title)
+                                    .collection("Batches").document(section)
+                                    .collection("Exam_questions").document(pdf);
+                            documentReference.set(uploadPDFClass).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(getApplicationContext(), "The pdf is added!", Toast.LENGTH_SHORT).show();
+                                    progressDialog.dismiss();
+                                    viewAllFiles();
+
+
+                                }
+                            });
+
+                        }
+                        else if(!(status.equals("Professional teacher / Home tutor"))){
+
+                            documentReference = firestore.collection("users").document(userID)
+                                    .collection("Courses").document(title)
+                                    .collection("Batches").document(section)
+                                    .collection("Exam_questions").document(pdf);
+                            documentReference.set(uploadPDFClass).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(getApplicationContext(), "The pdf is added!", Toast.LENGTH_SHORT).show();
+                                    progressDialog.dismiss();
+                                    viewAllFiles();
+
+
+                                }
+                            });
+                        }
+
+
+
 
 
                     }
+                }) .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                    }
                 });
+
+
+
 
 
             }

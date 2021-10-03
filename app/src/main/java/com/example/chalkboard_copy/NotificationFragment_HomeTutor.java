@@ -56,7 +56,7 @@ public class NotificationFragment_HomeTutor extends Fragment {
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         CollectionReference collectionReference3 = firestore.collection("Notices");
-collectionReference3.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        collectionReference3.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
     @Override
     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
         noticeClassList.clear();

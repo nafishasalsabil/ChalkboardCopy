@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -26,7 +27,7 @@ class MessageHomeTutorAdapter extends RecyclerView.Adapter<MessageHomeTutorAdapt
     String userID = firebaseAuth.getCurrentUser().getUid();
     Context context;
     List<ChatRecordClass> chats;
-
+    public String imageUrl="";
 
     private OnItemClickListener onItemClickListener;
 
@@ -40,10 +41,10 @@ class MessageHomeTutorAdapter extends RecyclerView.Adapter<MessageHomeTutorAdapt
         this.onItemClickListener = onItemClickListener;
     }
 
-    public MessageHomeTutorAdapter(Context context, List<ChatRecordClass> chats) {
+    public MessageHomeTutorAdapter(Context context, List<ChatRecordClass> chats,String imageUrl) {
         this.chats = chats;
         this.context = context;
-
+        this.imageUrl = imageUrl;
 
     }
 
@@ -81,6 +82,15 @@ class MessageHomeTutorAdapter extends RecyclerView.Adapter<MessageHomeTutorAdapt
     public void onBindViewHolder(@NonNull MessageHomeTutorViewHolder holder, int position) {
 
         ChatRecordClass chatRecordClass = chats.get(position);
+        if(imageUrl.equals("not_selected"))
+        {
+            holder.user_profile_pic.setImageResource(R.drawable.ic_profile);
+        }
+        else{
+//            Glide.with(context).load(imageUrl).into(holder.user_profile_pic);
+            System.out.println(imageUrl);
+
+        }
         holder.show_message.setText(chats.get(position).getMessage());
         if(position==chats.size()-1)
         {

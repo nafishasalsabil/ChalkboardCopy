@@ -61,21 +61,21 @@ public class MessageActivity extends AppCompatActivity {
     FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     String userID = firebaseAuth.getCurrentUser().getUid();
-EditText message_edittext;
-ImageButton send_button;
-MessageAdapter messageAdapter;
-List<ChatRecordClass> chatRecordClasses = new ArrayList<>();
-RecyclerView messages_recyclerview;
+    EditText message_edittext;
+    ImageButton send_button;
+    MessageAdapter messageAdapter;
+    List<ChatRecordClass> chatRecordClasses = new ArrayList<>();
+    RecyclerView messages_recyclerview;
     LinearLayoutManager linearLayoutManager;
- public String reciever = "";
- public String ts = "";
- CircleImageView profile;
- ValueEventListener seenListener;
- boolean isSeen = false;
- boolean notify = false;
- APIService apiService;
- public static String imageUrl="";
- public static String usernn = "",em="",img="",cho="";
+    public String reciever = "";
+    public String ts = "";
+    CircleImageView profile;
+    ValueEventListener seenListener;
+     boolean isSeen = false;
+    boolean notify = false;
+    APIService apiService;
+    public static String imageUrl="";
+     public static String usernn = "",em="",img="",cho="";
     DocumentReference documentReference12;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

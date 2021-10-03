@@ -44,7 +44,8 @@ public class Inside_class_home_tutor extends AppCompatActivity {
     private GoogleApiClient googleApiClient;
     private GoogleSignInOptions gso;
     private NavController navController;
-
+    public static String title  = "";
+    public static String section  = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,19 +70,25 @@ public class Inside_class_home_tutor extends AppCompatActivity {
 
         setSupportActionBar(toolbar_inside_class);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        Intent intent = getIntent();
+        section = intent.getStringExtra("section");
+        title = intent.getStringExtra("title");
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#ffffff")));
         toolbar_inside_class.setNavigationIcon(R.drawable.ic_back);
         getSupportActionBar().setElevation(0);
+        getSupportActionBar().setTitle(section);
+        toolbar_inside_class.setTitleTextColor(Color.BLACK);
         toolbar_inside_class.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),Batch_inside_courses_home_tutor.class);
+                intent.putExtra("title",title);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
                 finish();
             }
         });
-        Intent intent = getIntent();
-        String section = intent.getStringExtra("section");
-        String title = intent.getStringExtra("title");
+
         attendance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

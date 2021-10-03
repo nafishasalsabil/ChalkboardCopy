@@ -128,23 +128,7 @@ public class Attendance_activity extends AppCompatActivity {
      //   recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
      //   recyclerView.setLayoutManager(layoutManager);
-        DocumentReference retrievesection = firestore.collection("users")
-                .document(userID).collection("Courses").document(clicked_courseTitle);
 
-        retrievesection.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {
-                    String k = documentSnapshot.getString("section");
-                    courseInfo.setSection(k);
-                }
-            }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                    }
-                });
 
 
         // studentAdapter = new StudentAdapter(getApplicationContext(), studentItems);
@@ -167,6 +151,25 @@ public class Attendance_activity extends AppCompatActivity {
                 System.out.println(status+"___________Loading?");
                 System.out.println(status+" Check");
                 if(status.equals("Professional teacher / Home tutor")){
+
+                    DocumentReference retrievesection =firestore.collection("users")
+                            .document(userID).collection("All Files").document(PROF)
+                            .collection("Courses").document(clicked_courseTitle);
+
+                    retrievesection.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            if (documentSnapshot.exists()) {
+                                String k = documentSnapshot.getString("section");
+                                courseInfo.setSection(k);
+                            }
+                        }
+                    })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                }
+                            });
 
                     System.out.println("Working??????????????????????????");
 
@@ -196,6 +199,23 @@ public class Attendance_activity extends AppCompatActivity {
                 }
                 else if(!(status.equals("Professional teacher / Home tutor"))){
 
+                    DocumentReference retrievesection = firestore.collection("users")
+                            .document(userID).collection("Courses").document(clicked_courseTitle);
+
+                    retrievesection.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            if (documentSnapshot.exists()) {
+                                String k = documentSnapshot.getString("section");
+                                courseInfo.setSection(k);
+                            }
+                        }
+                    })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                }
+                            });
                     System.out.println("Not Working??????????????????????????");
 
                     studentcollection = firestore.collection("users").document(userID)

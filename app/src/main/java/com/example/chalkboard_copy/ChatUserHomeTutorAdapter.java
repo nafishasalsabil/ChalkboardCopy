@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -66,6 +67,15 @@ class ChatUserHomeTutorAdapter extends RecyclerView.Adapter<ChatUserHomeTutorAda
         holder.chat_sername.setText(chatUser.getUsername());
         System.out.println(chatUser.getUsername());
         System.out.println(chatUser.getId());
+        if(chatUser.getImageUrl().equals("not_selected"))
+        {
+            holder.user_profile_pic.setImageResource(R.drawable.ic_profile);
+        }
+        else{
+            Glide.with(context).load(chatUser.getImageUrl()).into(holder.user_profile_pic);
+            System.out.println(chatUser.getImageUrl());
+
+        }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,13 +85,13 @@ class ChatUserHomeTutorAdapter extends RecyclerView.Adapter<ChatUserHomeTutorAda
                 context.startActivity(intent);
             }
         });
-        if(isChat)
-        {
-            lastmessage(chatUser.getId(),holder.last_message_textview);
-        }
-        else {
-            holder.last_message_textview.setVisibility(View.GONE);
-        }
+//        if(isChat)
+//        {
+//            lastmessage(chatUser.getId(),holder.last_message_textview);
+//        }
+//        else {
+//            holder.last_message_textview.setVisibility(View.GONE);
+//        }
         if(isChat)
         {
             if(chatUser.getActive_status().equals("online"))

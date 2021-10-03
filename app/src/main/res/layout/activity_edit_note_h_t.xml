@@ -132,7 +132,7 @@
 
 
             <TextView
-                android:id="@+id/url_textview"
+                android:id="@+id/url_textview_ht"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/c6"

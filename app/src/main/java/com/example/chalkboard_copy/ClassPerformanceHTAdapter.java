@@ -11,13 +11,18 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -27,7 +32,9 @@ class ClassPerformanceHTAdapter extends RecyclerView.Adapter<ClassPerformanceHTA
 
    static Context context;
     List<PerformanceClass> performanceClassList;
-
+    public static String status = "";
+    public final String PROF="Professional Account";
+    public final String HT="Tutor Account";
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
@@ -40,6 +47,8 @@ List<StudentItems> itemsList = new ArrayList<>();
     int listSize=0;
     int g = 0;
     double attendance = 0;
+
+    public static Double percentage = 0.0;
     public void setListSize(int listSize) {
         this.listSize = listSize;
     }
@@ -96,25 +105,7 @@ List<StudentItems> itemsList = new ArrayList<>();
             name = itemView.findViewById(R.id.name_perf);
             marks = itemView.findViewById(R.id.performance_marks);
 
-           /* itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    *//*Dialog dialog = new Dialog(context);
-                    dialog.setContentView(R.layout.edit_class_layout);
-                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    EditText editcourseno = (EditText) dialog.findViewById(R.id.edit_courseno);
 
-                    EditText editcoursetype= (EditText) dialog.findViewById(R.id.edit_coursetype);
-
-                    EditText editcredithour = (EditText) dialog.findViewById(R.id.edit_credithours);
-
-                    //  System.out.println(classitems.get(position).getCredits());
-                    Button update = (Button) dialog.findViewById(R.id.updatebutton);
-                    Button cancel = (Button) dialog.findViewById(R.id.cancelbutton);
-*//*
-
-                }
-            });*/
         }
     }
 
@@ -130,290 +121,111 @@ List<StudentItems> itemsList = new ArrayList<>();
       //  holder.setIsRecyclable(false);
         holder.roll.setText(Integer.toString(performanceClassList.get(position).getId()));
         holder.name.setText(performanceClassList.get(position).getName());
-        CollectionReference collectionReference1 = firestore.collection("users").document(userID)
-                .collection("Courses").document(title)
-                .collection("Batches").document(section).collection("Attendance");
-        collectionReference1.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+
+
+        DocumentReference documentReference_for_status = firestore.collection("users").document(userID);
+
+        documentReference_for_status.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                itemsList.clear();
-                List<StudentItems> documentData = queryDocumentSnapshots.toObjects(StudentItems.class);
-                itemsList.addAll(documentData);
-                Log.d("checkListSuiize",itemsList.size()+"");
-                g = itemsList.size();
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot doc = task.getResult();
+                StringBuilder fields = new StringBuilder("");
+                status = fields.append(doc.get("choice")).toString();
 
-            }
-        });
-        DocumentReference documentReference2 =  firestore.collection("users").document(userID)
-                .collection("Courses").document(title)
-                .collection("Batches").document(section)
-                .collection("Class_Performance").document(holder.roll.getText().toString())
-                .collection("Marks").document("Coverted_to_100");
-        documentReference2.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-
-                PercentageClass percentageClass = documentSnapshot.toObject(PercentageClass.class);
-                holder.marks.setText(Double.toString(percentageClass.getPercentage())+"%");
-            }
-        });
+                if(status.equals("Professional teacher / Home tutor")){
 
 
-     /*   CollectionReference  collectionReference2 = firestore.collection("users").document(userID)
-                .collection("Courses").document(title)
-                .collection("Batches").document(section)
-                .collection("Class_Performance");
-        collectionReference2.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                List<PerformanceClass> documentData1 = queryDocumentSnapshots.toObjects(PerformanceClass.class);
-
-                for(PerformanceClass performanceClass : documentData1)
-                {
-                    System.out.println(performanceClass.getId());
-                    Log.d("checkLI",listSize+"");
-
-                     documentReference1 = collectionReference2.document(Integer.toString(performanceClass.getId()));
-                    documentReference1.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    CollectionReference collectionReference1 =  firestore.collection("users")
+                            .document(userID).collection("All Files")
+                            .document(HT).collection("Courses").document(title)
+                            .collection("Batches").document(section).collection("Attendance");
+                    collectionReference1.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
-                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                            PerformanceClass performanceClass = documentSnapshot.toObject(PerformanceClass.class);
-                            Log.d("checkAtt",performanceClass.getCount()+"");
-
-                            if(performanceClass.getCount()==itemsList.size())
-                            {
-
-                                attendance = 10;
-                                Log.d("checkAtt",attendance+"");
-                                DocumentReference documentReference1 =  firestore.collection("users").document(userID)
-                                        .collection("Courses").document(title)
-                                        .collection("Batches").document(section)
-                                        .collection("Class_Performance").document(holder.roll.getText().toString())
-                                        .collection("Backup").document("Coverted_to_20");
-                                Map<String, Object> user1 = new HashMap<>();
-                                user1.put("attendance", attendance);
-                                user1.put("grade","not_given");
-                                user1.put("cgpa",0);
-                                user1.put("final_marks",0);
-                                user1.put("thirtybackup", 0);
-
-                                documentReference1.set(user1, SetOptions.merge());
-                                DocumentReference collectionReference =  firestore.collection("users").document(userID)
-                                        .collection("Courses").document(title)
-                                        .collection("Batches").document(section)
-                                        .collection("Class_Performance").document(holder.roll.getText().toString())
-                                        .collection("Backup").document("Coverted_to_20");
-                                collectionReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        PerformanceClass performanceClass = documentSnapshot.toObject(PerformanceClass.class);
-                                        double s2 = performanceClass.getConverted_quiz();
-                                        Log.d("checkS1",attendance+"");
-                                        Log.d ("checkS2",s2+"");
-
-                                        double  sum = attendance+s2;
-                                        Log.d ("checkSUM",sum+"");
-
-                                        holder.marks.setText(sum+"");
-                                        DocumentReference documentReference0 =  firestore.collection("users").document(userID)
-                                                .collection("Courses").document(title)
-                                                .collection("Batches").document(section)
-                                                .collection("Class_Performance").document(holder.roll.getText().toString())
-                                                .collection("Backup").document("Coverted_to_20");
-                                        Map<String, Object> user0 = new HashMap<>();
-                                        user0.put("thirtybackup", sum);
-                                        documentReference0.update(user0);
-
-
-
-                                    }
-                                });
-
-
-                            }
-                            else{
-                                if(performanceClass.getCount()<itemsList.size() && performanceClass.getCount()>((itemsList.size()*60)/100))
-                                {
-                                    attendance =7;
-                                    Log.d("checkAtt",attendance+"");
-                                    DocumentReference documentReference2 =  firestore.collection("users").document(userID)
-                                            .collection("Courses").document(title)
-                                            .collection("Sections").document(section)
-                                            .collection("Class_Performance").document(holder.roll.getText().toString())
-                                            .collection("Backup").document("Coverted_to_20");
-                                    Map<String, Object> user1 = new HashMap<>();
-                                    user1.put("attendance", attendance);
-                                    user1.put("grade","not_given");
-                                    user1.put("cgpa",0);
-                                    user1.put("final_marks",0);
-                                    user1.put("thirtybackup", 0);
-                                    documentReference2.set(user1, SetOptions.merge());
-                                    DocumentReference collectionReference =  firestore.collection("users").document(userID)
-                                            .collection("Courses").document(title)
-                                            .collection("Sections").document(section)
-                                            .collection("Class_Performance").document(holder.roll.getText().toString())
-                                            .collection("Backup").document("Coverted_to_20");
-                                    collectionReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                        @Override
-                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                            PerformanceClass performanceClass = documentSnapshot.toObject(PerformanceClass.class);
-                                            double s2 = performanceClass.getConverted_quiz();
-                                            Log.d("checkS1",attendance+"");
-                                            Log.d ("checkS2",s2+"");
-
-                                            double  sum = attendance+s2;
-                                            Log.d ("checkSUM",sum+"");
-
-                                            holder.marks.setText(sum+"");
-
-                                            DocumentReference documentReference0 =  firestore.collection("users").document(userID)
-                                                    .collection("Courses").document(title)
-                                                    .collection("Sections").document(section)
-                                                    .collection("Class_Performance").document(holder.roll.getText().toString())
-                                                    .collection("Backup").document("Coverted_to_20");
-                                            Map<String, Object> user0 = new HashMap<>();
-                                            user0.put("thirtybackup", sum);
-                                            documentReference0.update(user0);
-
-
-                                        }
-                                    });
-
-
-                                }
-                                else if(performanceClass.getCount()<((itemsList.size()*60)/100))
-
-                                {
-                                    attendance =4;
-                                    Log.d("checkAtt",attendance+"");
-                                    DocumentReference documentReference3 =  firestore.collection("users").document(userID)
-                                            .collection("Courses").document(title)
-                                            .collection("Sections").document(section)
-                                            .collection("Class_Performance").document(holder.roll.getText().toString())
-                                            .collection("Backup").document("Coverted_to_20");
-                                    Map<String, Object> user1 = new HashMap<>();
-                                    user1.put("attendance", attendance);
-                                    user1.put("grade","not_given");
-                                    user1.put("cgpa",0);
-                                    user1.put("final_marks",0);
-                                    user1.put("thirtybackup", 0);
-                                    documentReference3.set(user1, SetOptions.merge());
-                                    DocumentReference collectionReference =  firestore.collection("users").document(userID)
-                                            .collection("Courses").document(title)
-                                            .collection("Sections").document(section)
-                                            .collection("Class_Performance").document(holder.roll.getText().toString())
-                                            .collection("Backup").document("Coverted_to_20");
-                                    collectionReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                        @Override
-                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                            PerformanceClass performanceClass = documentSnapshot.toObject(PerformanceClass.class);
-                                            double s2 = performanceClass.getConverted_quiz();
-                                            Log.d("checkS1",attendance+"");
-                                            Log.d ("checkS2",s2+"");
-
-                                            double  sum = attendance+s2;
-                                            Log.d ("checkSUM",sum+"");
-
-                                            holder.marks.setText(sum+"");
-                                            DocumentReference documentReference0 =  firestore.collection("users").document(userID)
-                                                    .collection("Courses").document(title)
-                                                    .collection("Sections").document(section)
-                                                    .collection("Class_Performance").document(holder.roll.getText().toString())
-                                                    .collection("Backup").document("Coverted_to_20");
-                                            Map<String, Object> user0 = new HashMap<>();
-                                            user0.put("thirtybackup", sum);
-                                            documentReference0.update(user0);
-
-
-                                        }
-                                    });
-
-
-                                }
-                            }
-
-
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            itemsList.clear();
+                            List<StudentItems> documentData = queryDocumentSnapshots.toObjects(StudentItems.class);
+                            itemsList.addAll(documentData);
+                            Log.d("checkListSuiize",itemsList.size()+"");
+                            g = itemsList.size();
 
                         }
                     });
+                    DocumentReference documentReference2 =   firestore.collection("users")
+                            .document(userID).collection("All Files")
+                            .document(HT).collection("Courses").document(title)
+                            .collection("Batches").document(section)
+                            .collection("Class_Performance").document(holder.roll.getText().toString())
+                            .collection("Marks").document("Coverted_to_100");
+                    documentReference2.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                            if(documentSnapshot.exists())
+                            {
+//                    PercentageClass percentageClass = documentSnapshot.toObject(PercentageClass.class);
+//                    holder.marks.setText(Double.toString(percentageClass.getPercentage())+"%");
+                                percentage=documentSnapshot.getDouble("percentage");
+                                holder.marks.setText(Double.toString(percentage)+"%");
+                            }
+                            else{
+                                holder.marks.setText("No value");
+                            }
+
+                        }
+                    });
+
                 }
-            }
-        });
-*/
-       /* DocumentReference collectionReference =  firestore.collection("users").document(userID)
-                .collection("Courses").document(title)
-                .collection("Sections").document(section)
-                .collection("Class_Performance").document(holder.roll.getText().toString())
-                .collection("Backup").document("Coverted_to_20");
-        collectionReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                PerformanceClass performanceClass = documentSnapshot.toObject(PerformanceClass.class);
-                double s1 =  performanceClass.getAttendance() ;
-                double s2 = performanceClass.getConverted_quiz();
-                 Log.d("checkS1",s1+"");
-                Log.d ("checkS2",s2+"");
+                else if(!(status.equals("Professional teacher / Home tutor"))){
+                    CollectionReference collectionReference1 = firestore.collection("users").document(userID)
+                            .collection("Courses").document(title)
+                            .collection("Batches").document(section).collection("Attendance");
+                    collectionReference1.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            itemsList.clear();
+                            List<StudentItems> documentData = queryDocumentSnapshots.toObjects(StudentItems.class);
+                            itemsList.addAll(documentData);
+                            Log.d("checkListSuiize",itemsList.size()+"");
+                            g = itemsList.size();
 
-                double  sum = s1+s2;
-                Log.d ("checkSUM",sum+"");
+                        }
+                    });
+                    DocumentReference documentReference2 =  firestore.collection("users").document(userID)
+                            .collection("Courses").document(title)
+                            .collection("Batches").document(section)
+                            .collection("Class_Performance").document(holder.roll.getText().toString())
+                            .collection("Marks").document("Coverted_to_100");
+                    documentReference2.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
 
-                holder.marks.setText(sum+"");
+                            if(documentSnapshot.exists())
+                            {
+//                    PercentageClass percentageClass = documentSnapshot.toObject(PercentageClass.class);
+//                    holder.marks.setText(Double.toString(percentageClass.getPercentage())+"%");
+                                percentage=documentSnapshot.getDouble("percentage");
+                                holder.marks.setText(Double.toString(percentage)+"%");
+                            }
+                            else{
+                                holder.marks.setText("No value");
+                            }
 
+                        }
+                    });
 
-            }
-        });
-       */ /*collectionReference.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-
-                List<PerformanceClass> documentData1 = queryDocumentSnapshots.toObjects(PerformanceClass.class);
-
-                    for(PerformanceClass performanceClass : documentData1)
-                    {
-                       double s1 =  performanceClass.getAttendance() ;
-                       double s2 = performanceClass.getConverted_quiz();
-                        Log.d("checkS1",s1+"");
-                        Log.d ("checkS2",s2+"");
-
-                      double  sum = s1+s2;
-                        Log.d ("checkSUM",sum+"");
-
-                        holder.marks.setText(sum+"");
-                      //  sum=0;
-                    }
-            }
-        });
-
-*/
-   /*     DocumentReference documentReference3 = firestore.collection("users").document(userID)
-                .collection("Courses").document(clicked_courseTitle).collection("Sections").document(clicked_course_section)
-                .collection("Attendance").document(Lecture_s).collection("Status").document(Integer.toString(studentItems1.getId()));
-*/
-      /*  documentReference = firestore.collection("users").document(userID)
-                .collection("Courses").document(title).collection("Sections")
-                .document(section)
-                .collection("Attendance").document(lectureName).collection("Status").document(Integer.toString(studentItemsrecord.get(position).getId()));
-        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                StatusClass statusClass = documentSnapshot.toObject(StatusClass.class);
-
-                holder.status.setText(statusClass.getStatus());
-                Log.d("checkS",statusClass.getStatus());
-                if(statusClass.getStatus().equals("present"))
-                {
-                    i++;
-                    Log.d("checkStatus",i+"");
                 }
 
             }
-        }).addOnFailureListener(new OnFailureListener() {
+        }) .addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-
             }
-        });*/
-       // System.out.println(studentItemsrecord.get(position).getStatus());
+        });
+
+
+
+
+
 
 
     }

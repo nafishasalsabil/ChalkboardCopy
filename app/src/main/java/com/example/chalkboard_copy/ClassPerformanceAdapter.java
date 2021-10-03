@@ -106,25 +106,7 @@ List<StudentItems> itemsList = new ArrayList<>();
             name = itemView.findViewById(R.id.name_perf);
             marks = itemView.findViewById(R.id.performance_marks);
 
-           /* itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    *//*Dialog dialog = new Dialog(context);
-                    dialog.setContentView(R.layout.edit_class_layout);
-                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    EditText editcourseno = (EditText) dialog.findViewById(R.id.edit_courseno);
 
-                    EditText editcoursetype= (EditText) dialog.findViewById(R.id.edit_coursetype);
-
-                    EditText editcredithour = (EditText) dialog.findViewById(R.id.edit_credithours);
-
-                    //  System.out.println(classitems.get(position).getCredits());
-                    Button update = (Button) dialog.findViewById(R.id.updatebutton);
-                    Button cancel = (Button) dialog.findViewById(R.id.cancelbutton);
-*//*
-
-                }
-            });*/
         }
     }
 

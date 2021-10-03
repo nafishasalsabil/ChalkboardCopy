@@ -17,12 +17,17 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.SetOptions;
 
 import java.util.HashMap;
@@ -40,7 +45,9 @@ class QuizMarksRecordHTAdapter extends RecyclerView.Adapter<QuizMarksRecordHTAda
     List<QuizMarksClass> studentItems;
     List<StudentItems> studentItems1;
     String a="",b="";
-
+    public static String status = "";
+    public final String PROF="Professional Account";
+    public final String HT="Tutor Account";
     private OnItemClickListener onItemClickListener;
     int total_marks;
     int marks_total=0;
@@ -136,75 +143,183 @@ class QuizMarksRecordHTAdapter extends RecyclerView.Adapter<QuizMarksRecordHTAda
         System.out.println(studentItems.get(position).getName());
         Log.d("checktag",title);
 
-        DocumentReference documentReference = firestore.collection("users").document(userID)
-                .collection("Courses").document(title).collection("Batches")
-                .document(section)
-                .collection("Quizes").document(quiz);
-        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+
+        DocumentReference documentReference_for_status = firestore.collection("users").document(userID);
+
+        documentReference_for_status.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                QuizNameClass quizNameClass = documentSnapshot.toObject(QuizNameClass.class);
-                assert quizNameClass != null;
-                marks_total =  quizNameClass.getQuiz_total_marks();
-                System.out.println(marks_total);
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot doc = task.getResult();
+                StringBuilder fields = new StringBuilder("");
+                status = fields.append(doc.get("choice")).toString();
+
+                if(status.equals("Professional teacher / Home tutor")){
+
+
+
+                    DocumentReference documentReference = firestore.collection("users")
+                            .document(userID).collection("All Files")
+                            .document(HT).collection("Courses").document(title).collection("Batches")
+                            .document(section)
+                            .collection("Quizes").document(quiz);
+                    documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            QuizNameClass quizNameClass = documentSnapshot.toObject(QuizNameClass.class);
+                            assert quizNameClass != null;
+                            marks_total =  quizNameClass.getQuiz_total_marks();
+                            System.out.println(marks_total);
+
+                        }
+                    });
+                    holder.add_marks.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Dialog dialog = new Dialog(context);
+                            dialog.setContentView(R.layout.quiz_marks_dialog_ht);
+                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            EditText marks = dialog.findViewById(R.id.quiz_marks_edittext_ht);
+                            Button ok = dialog.findViewById(R.id.done_quiz_marks_add_ht);
+
+                            ok.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    int marks_quiz =Integer.parseInt( marks.getText().toString());
+                                    System.out.println(marks_total);
+                                    if(marks_quiz>marks_total)
+                                    {
+                                        //  System.out.println("dfghjkl");
+                                        //   marks.requestFocus();
+                                        marks.setError("Invalid marks");
+                                    }
+                                    else
+                                    {
+                                        System.out.println(marks_quiz);
+                                        holder.quiz_marks.setText(Integer.toString(marks_quiz));
+                                        //  holder.add_marks.setImageResource(R.drawable.ic_pencil_edit);
+
+                                        DocumentReference documentReference =  firestore.collection("users")
+                                                .document(userID).collection("All Files")
+                                                .document(HT).collection("Courses").document(title).collection("Batches")
+                                                .document(section)
+                                                .collection("Quizes").document(quiz).collection("Students")
+                                                .document(Integer.toString(studentItems.get(position).getId()));
+
+                                        Map<String,Object> user = new HashMap<>();
+                                        user.put("marks",marks_quiz);
+                                        documentReference.set(user, SetOptions.merge());
+                                        DocumentReference documentReference1 =   firestore.collection("users")
+                                                .document(userID).collection("All Files")
+                                                .document(HT).collection("Courses").document(title).collection("Batches")
+                                                .document(section)
+                                                .collection("Class_Performance")
+                                                .document(Integer.toString(studentItems.get(position).getId()))
+                                                .collection("quizes").document(quiz);
+
+                                        Map<String,Object> user1 = new HashMap<>();
+                                        user1.put("marks",marks_quiz);
+                                        documentReference1.update(user1);
+
+                                        dialog.dismiss();
+                                    }
+
+                                }
+
+                            });
+                            dialog.show();
+                        }
+                    });
+                }
+                else if(!(status.equals("Professional teacher / Home tutor"))){
+
+
+                    DocumentReference documentReference = firestore.collection("users").document(userID)
+                            .collection("Courses").document(title).collection("Batches")
+                            .document(section)
+                            .collection("Quizes").document(quiz);
+                    documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            QuizNameClass quizNameClass = documentSnapshot.toObject(QuizNameClass.class);
+                            assert quizNameClass != null;
+                            marks_total =  quizNameClass.getQuiz_total_marks();
+                            System.out.println(marks_total);
+
+                        }
+                    });
+                    holder.add_marks.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Dialog dialog = new Dialog(context);
+                            dialog.setContentView(R.layout.quiz_marks_dialog_ht);
+                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            EditText marks = dialog.findViewById(R.id.quiz_marks_edittext_ht);
+                            Button ok = dialog.findViewById(R.id.done_quiz_marks_add_ht);
+
+                            ok.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    int marks_quiz =Integer.parseInt( marks.getText().toString());
+                                    System.out.println(marks_total);
+                                    if(marks_quiz>marks_total)
+                                    {
+                                        //  System.out.println("dfghjkl");
+                                        //   marks.requestFocus();
+                                        marks.setError("Invalid marks");
+                                    }
+                                    else
+                                    {
+                                        System.out.println(marks_quiz);
+                                        holder.quiz_marks.setText(Integer.toString(marks_quiz));
+                                        //  holder.add_marks.setImageResource(R.drawable.ic_pencil_edit);
+
+                                        DocumentReference documentReference =  firestore.collection("users").document(userID)
+                                                .collection("Courses").document(title).collection("Batches")
+                                                .document(section)
+                                                .collection("Quizes").document(quiz).collection("Students")
+                                                .document(Integer.toString(studentItems.get(position).getId()));
+
+                                        Map<String,Object> user = new HashMap<>();
+                                        user.put("marks",marks_quiz);
+                                        documentReference.set(user, SetOptions.merge());
+                                        DocumentReference documentReference1 =  firestore.collection("users").document(userID)
+                                                .collection("Courses").document(title).collection("Batches")
+                                                .document(section)
+                                                .collection("Class_Performance")
+                                                .document(Integer.toString(studentItems.get(position).getId()))
+                                                .collection("quizes").document(quiz);
+
+                                        Map<String,Object> user1 = new HashMap<>();
+                                        user1.put("marks",marks_quiz);
+                                        documentReference1.update(user1);
+
+                                        dialog.dismiss();
+                                    }
+
+                                }
+
+                            });
+                            dialog.show();
+                        }
+                    });
+
+                }
+
 
             }
-            });
-        holder.add_marks.setOnClickListener(new View.OnClickListener() {
+        }) .addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onClick(View v) {
-                Dialog dialog = new Dialog(context);
-                dialog.setContentView(R.layout.quiz_marks_dialog_ht);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                EditText marks = dialog.findViewById(R.id.quiz_marks_edittext_ht);
-                Button ok = dialog.findViewById(R.id.done_quiz_marks_add_ht);
-
-                ok.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int marks_quiz =Integer.parseInt( marks.getText().toString());
-                        System.out.println(marks_total);
-                        if(marks_quiz>marks_total)
-                        {
-                          //  System.out.println("dfghjkl");
-                         //   marks.requestFocus();
-                            marks.setError("Invalid marks");
-                        }
-                        else
-                        {
-                            System.out.println(marks_quiz);
-                            holder.quiz_marks.setText(Integer.toString(marks_quiz));
-                          //  holder.add_marks.setImageResource(R.drawable.ic_pencil_edit);
-
-                            DocumentReference documentReference =  firestore.collection("users").document(userID)
-                                    .collection("Courses").document(title).collection("Batches")
-                                    .document(section)
-                                    .collection("Quizes").document(quiz).collection("Students")
-                                    .document(Integer.toString(studentItems.get(position).getId()));
-
-                            Map<String,Object> user = new HashMap<>();
-                            user.put("marks",marks_quiz);
-                            documentReference.set(user, SetOptions.merge());
-                                DocumentReference documentReference1 =  firestore.collection("users").document(userID)
-                                    .collection("Courses").document(title).collection("Batches")
-                                    .document(section)
-                                    .collection("Class_Performance")
-                                    .document(Integer.toString(studentItems.get(position).getId()))
-                                    .collection("quizes").document(quiz);
-
-                            Map<String,Object> user1 = new HashMap<>();
-                            user1.put("marks",marks_quiz);
-                            documentReference1.update(user1);
-
-                            dialog.dismiss();
-                        }
-
-                    }
-
-                });
-                dialog.show();
+            public void onFailure(@NonNull Exception e) {
             }
         });
+
+
+
+
+
+
+
+
 
     }
 

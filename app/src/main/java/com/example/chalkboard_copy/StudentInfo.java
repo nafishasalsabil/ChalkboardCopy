@@ -69,18 +69,7 @@ public class StudentInfo extends AppCompatActivity {
                 finish();
             }
         });
-/*
-        info.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                StudentInfoDialog studentInfoDialog = new StudentInfoDialog();
-                */
-        /*studentInfoDialog.*//*
 
-                studentInfoDialog.show(getSupportFragmentManager(), "studentinfodialog");
-            }
-        });
-*/
         Intent intent = getIntent();
         String section = intent.getStringExtra("section");
         String title = intent.getStringExtra("title");

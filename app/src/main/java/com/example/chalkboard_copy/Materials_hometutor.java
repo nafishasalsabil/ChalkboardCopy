@@ -1,6 +1,7 @@
 package com.example.chalkboard_copy;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -24,6 +25,8 @@ public class Materials_hometutor extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar_materials.setNavigationIcon(R.drawable.ic_back);
         getSupportActionBar().setElevation(0);
+        getSupportActionBar().setTitle("Materials");
+        toolbar_materials.setTitleTextColor(Color.BLACK);
         toolbar_materials.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

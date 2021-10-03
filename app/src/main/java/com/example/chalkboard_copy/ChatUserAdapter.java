@@ -86,13 +86,13 @@ class ChatUserAdapter extends RecyclerView.Adapter<ChatUserAdapter.ChatUserViewH
                 context.startActivity(intent);
             }
         });
-        if(isChat)
+        /*if(isChat)
         {
             lastmessage(chatUser.getId(),holder.last_message_textview);
         }
         else {
             holder.last_message_textview.setVisibility(View.GONE);
-        }
+        }*/
         if(isChat)
         {
             if(chatUser.getActive_status().equals("online"))

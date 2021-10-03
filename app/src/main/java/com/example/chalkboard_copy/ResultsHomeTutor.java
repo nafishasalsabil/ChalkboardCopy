@@ -1,6 +1,7 @@
 package com.example.chalkboard_copy;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 
@@ -23,6 +24,8 @@ public class ResultsHomeTutor extends AppCompatActivity {
         setSupportActionBar(results_toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         results_toolbar.setNavigationIcon(R.drawable.ic_back);
+        getSupportActionBar().setTitle("Results");
+        results_toolbar.setTitleTextColor(Color.BLACK);
         getSupportActionBar().setElevation(0);
         results_toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

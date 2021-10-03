@@ -11,8 +11,10 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -31,6 +33,9 @@ class All_Students_All_Attendance_Record_Home_TutorAdapter extends RecyclerView.
     String userID = firebaseAuth.getCurrentUser().getUid();
     DocumentReference documentReference;
     String lectureName,title,section;
+    public static String status_ht = "";
+    public final String PROF="Professional Account";
+    public final String HT="Tutor Account";
     int i=0;
 
     public void setLectureName(String lectureName) {
@@ -113,31 +118,90 @@ class All_Students_All_Attendance_Record_Home_TutorAdapter extends RecyclerView.
                 .collection("Courses").document(clicked_courseTitle).collection("Sections").document(clicked_course_section)
                 .collection("Attendance").document(Lecture_s).collection("Status").document(Integer.toString(studentItems1.getId()));
 */
-        documentReference = firestore.collection("users").document(userID)
-                .collection("Courses").document(title).collection("Batches")
-                .document(section)
-                .collection("Attendance").document(lectureName).collection("Status").document(Integer.toString(studentItemsrecord.get(position).getId()));
-        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                StatusClass statusClass = documentSnapshot.toObject(StatusClass.class);
+        DocumentReference documentReference_for_status = firestore.collection("users").document(userID);
 
-                holder.status.setText(statusClass.getStatus());
-                Log.d("checkS",statusClass.getStatus());
-                if(statusClass.getStatus().equals("present"))
-                {
-                    i++;
-                    Log.d("checkStatus",i+"");
+        documentReference_for_status.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot doc = task.getResult();
+                StringBuilder fields = new StringBuilder("");
+                status_ht = fields.append(doc.get("choice")).toString();
+                System.out.println(status_ht+"___________Loading?");
+                System.out.println(status_ht+" Check");
+                if(status_ht.equals("Professional teacher / Home tutor")){
+
+                    documentReference = firestore.collection("users").document(userID)
+                            .collection("All Files").document(HT)
+                            .collection("Courses").document(title).collection("Batches")
+                            .document(section)
+                            .collection("Attendance").document(lectureName).collection("Status").document(Integer.toString(studentItemsrecord.get(position).getId()));
+                    documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            System.out.println(studentItemsrecord.get(position).getStatus());
+
+                            StatusClass statusClass = documentSnapshot.toObject(StatusClass.class);
+                            Log.d("checkS",statusClass.getStatus());
+
+                            holder.status.setText(statusClass.getStatus());
+                            if(statusClass.getStatus().equals("present"))
+                            {
+                                i++;
+                                Log.d("checkStatus",i+"");
+                            }
+
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                        }
+                    });
+                    System.out.println(studentItemsrecord.get(position).getStatus());
+                    System.out.println("Working??????????????????????????");
+
+                }
+                else if(!(status_ht.equals("Professional teacher / Home tutor"))){
+                    documentReference = firestore.collection("users").document(userID)
+                            .collection("Courses").document(title).collection("Batches")
+                            .document(section)
+                            .collection("Attendance").document(lectureName).collection("Status").document(Integer.toString(studentItemsrecord.get(position).getId()));
+                    documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            StatusClass statusClass = documentSnapshot.toObject(StatusClass.class);
+
+                            holder.status.setText(statusClass.getStatus());
+                            Log.d("checkS",statusClass.getStatus());
+                            if(statusClass.getStatus().equals("present"))
+                            {
+                                i++;
+                                Log.d("checkStatus",i+"");
+                            }
+
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                        }
+                    });
+                    System.out.println(studentItemsrecord.get(position).getStatus());
+
                 }
 
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
 
             }
+        }) .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+            }
         });
-        System.out.println(studentItemsrecord.get(position).getStatus());
+
+
+
+
+
 
     }
 

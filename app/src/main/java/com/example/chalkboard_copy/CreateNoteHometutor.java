@@ -16,11 +16,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
@@ -37,7 +42,9 @@ public class CreateNoteHometutor extends AppCompatActivity {
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     String userID = firebaseAuth.getCurrentUser().getUid();
-
+    public static String status = "";
+    public final String PROF="Professional Account";
+    public final String HT="Tutor Account";
     public String title = "";
     public String section = "";
     DocumentReference documentReference;
@@ -122,7 +129,7 @@ public class CreateNoteHometutor extends AppCompatActivity {
 
                 System.out.println(input_note);
 
-                // inputNoteText.setText(inputNoteText + "" + url);
+
 
                 System.out.println(url);
 
@@ -133,16 +140,14 @@ public class CreateNoteHometutor extends AppCompatActivity {
                 }
                 else if(!Patterns.WEB_URL.matcher(input_url.getText().toString()).matches())
                 {
-                    //  Toast.makeText(getApplicationContext(),"Enter valid url!",Toast.LENGTH_LONG);
+
                     input_url.setError("Enter valid url!");
 
 
                 }
                 else
                 {
-                   /* String u = inputNoteText.getText().toString() + " " + input_url.getText().toString();
-                    inputNoteText.setText(u);
-                   */
+
                     url_text.setVisibility(View.VISIBLE);
                     url_text.setText(url);
                     Linkify.addLinks(url_text, Linkify.WEB_URLS);
@@ -178,37 +183,73 @@ public class CreateNoteHometutor extends AppCompatActivity {
             }
 
 
+            DocumentReference documentReference_for_status = firestore.collection("users").document(userID);
 
-            DocumentReference documentReference = firestore.collection("users").document(userID)
-                    .collection("Courses").document(title)
-                    .collection("Batches").document(section).collection("MyNotes").document(note_title);
-            Map<String, Object> user = new HashMap<>();
-            user.put("noteTitle", note_title);
-            user.put("subtitle",note_subtitle);
-            user.put("date",date_today);
-            user.put("mynote",my_note);
-            user.put("url",url);
-            user.put("search",note_title);
+            documentReference_for_status.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    DocumentSnapshot doc = task.getResult();
+                    StringBuilder fields = new StringBuilder("");
+                    status = fields.append(doc.get("choice")).toString();
+
+                    if(status.equals("Professional teacher / Home tutor")){
+                        DocumentReference documentReference = firestore.collection("users").document(userID)
+                                .collection("All Files").document(HT)
+                                .collection("Courses").document(title)
+                                .collection("Batches").document(section).collection("MyNotes").document(note_title);
+                        Map<String, Object> user = new HashMap<>();
+                        user.put("noteTitle", note_title);
+                        user.put("subtitle",note_subtitle);
+                        user.put("date",date_today);
+                        user.put("mynote",my_note);
+                        user.put("url",url);
+                        user.put("search",note_title);
 
 
-            documentReference.set(user);
+                        documentReference.set(user);
 
-            Intent intent = new Intent(getApplicationContext(),MyNotes_hometutor.class);
-            intent.putExtra("section",section);
-            intent.putExtra("title",title);
-            startActivity(intent);
-            /*Map<String, Object> user = new HashMap<>();
-            user.put("noteTitle", note_title);
-            user.put("subtitle", note_subtitle);
-            user.put("mynote", my_note);
-         */
+                        Intent intent = new Intent(getApplicationContext(),MyNotes_hometutor.class);
+                        intent.putExtra("section",section);
+                        intent.putExtra("title",title);
+                        startActivity(intent);
+
+
+                    }
+                    else if(!(status.equals("Professional teacher / Home tutor"))){
+
+                        DocumentReference documentReference = firestore.collection("users").document(userID)
+                                .collection("Courses").document(title)
+                                .collection("Batches").document(section).collection("MyNotes").document(note_title);
+                        Map<String, Object> user = new HashMap<>();
+                        user.put("noteTitle", note_title);
+                        user.put("subtitle",note_subtitle);
+                        user.put("date",date_today);
+                        user.put("mynote",my_note);
+                        user.put("url",url);
+                        user.put("search",note_title);
+
+
+                        documentReference.set(user);
+
+                        Intent intent = new Intent(getApplicationContext(),MyNotes_hometutor.class);
+                        intent.putExtra("section",section);
+                        intent.putExtra("title",title);
+                        startActivity(intent);
+
+
+                    }
+
+
+
+                }
+            }) .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                }
+            });
+
 
         }
-        //ekhane hobe kaaj wait
 
-       /* final ContactsContract.CommonDataKinds.Note note = new ContactsContract.CommonDataKinds.Note();
-        note.setTitle(inputNoteTitle.getText().toString());
-
-*/
     }
 }

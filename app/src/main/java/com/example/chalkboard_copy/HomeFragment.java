@@ -111,7 +111,7 @@ public class HomeFragment extends Fragment {
                             {
                                 ScheduleClass scheduleClass = documentSnapshot.toObject(ScheduleClass.class);
 //                    System.out.println(scheduleClass.getDay());
-                                if(scheduleClass.getDay().equals(dayOfTheWeek))
+                                if(scheduleClass.getDay().equals(dayOfTheWeek) && scheduleClass.getDate().equals(date))
                                 {
                                     // List<ScheduleClass> doc = queryDocumentSnapshots.toObjects(ScheduleClass.class);
                                     scheduleClassList1.add(scheduleClass);
@@ -175,7 +175,7 @@ public class HomeFragment extends Fragment {
                             {
                                 ScheduleClass scheduleClass = documentSnapshot.toObject(ScheduleClass.class);
 //                    System.out.println(scheduleClass.getDay());
-                                if(scheduleClass.getDay().equals(dayOfTheWeek))
+                                if(scheduleClass.getDay().equals(dayOfTheWeek) && scheduleClass.getDate().equals(date))
                                 {
                                     // List<ScheduleClass> doc = queryDocumentSnapshots.toObjects(ScheduleClass.class);
                                     scheduleClassList1.add(scheduleClass);

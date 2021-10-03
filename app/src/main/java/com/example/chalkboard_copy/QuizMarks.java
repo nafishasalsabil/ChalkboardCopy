@@ -209,23 +209,21 @@ public class QuizMarks extends AppCompatActivity {
                 add_quiz_done.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String q_n = quiz_name.getText().toString();
-                        String q_d = quiz_date.getText().toString();
-                       int q = Integer.parseInt(total_marks.getText().toString());
-                        if (TextUtils.isEmpty(q_n)) {
+
+                        if (TextUtils.isEmpty(quiz_name.getText().toString())) {
                             quiz_name.setError("Quiz name is required");
                             return;
-                        }
-                        if (TextUtils.isEmpty(q_d)) {
+                        } else if (TextUtils.isEmpty(quiz_date.getText().toString())) {
                             quiz_date.setError("Quiz date is required");
                             return;
-                        }
-                        if (TextUtils.isEmpty(total_marks.getText().toString())) {
+                        } else if (TextUtils.isEmpty(total_marks.getText().toString())) {
                             total_marks.setError("Quiz marks is required");
                             return;
-                        }
+                        } else {
 
-
+                            String q_n = quiz_name.getText().toString();
+                            String q_d = quiz_date.getText().toString();
+                            int q = Integer.parseInt(total_marks.getText().toString());
                         documentReference_for_status.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -233,7 +231,7 @@ public class QuizMarks extends AppCompatActivity {
                                 StringBuilder fields = new StringBuilder("");
                                 status = fields.append(doc.get("choice")).toString();
 
-                                if(status.equals("Professional teacher / Home tutor")){
+                                if (status.equals("Professional teacher / Home tutor")) {
 
                                     DocumentReference documentReference = firestore.collection("users").document(userID)
                                             .collection("All Files").document(PROF)
@@ -242,19 +240,19 @@ public class QuizMarks extends AppCompatActivity {
 
                                     Map<String, Object> user = new HashMap<>();
                                     user.put("quiz", q_n);
-                                    user.put("quiz_date",q_d);
-                                    user.put("quiz_total_marks",q);
+                                    user.put("quiz_date", q_d);
+                                    user.put("quiz_total_marks", q);
                                     documentReference.set(user);
-                                    QuizNameClass quizNameClass = new QuizNameClass(q_n,q_d,q);
-                                    quizItems.add(quizNameClass);
+                                    QuizNameClass quizNameClass = new QuizNameClass(q_n, q_d, q);
+
                                     quizMarksAdapter = new QuizMarksAdapter(getApplicationContext(), quizItems);
 
                                     quiz_recylerview.setAdapter(quizMarksAdapter);
-
+                                    quizItems.add(quizNameClass);
                                     quizMarksAdapter.notifyDataSetChanged();
 
                                     dialog.dismiss();
-                                    CollectionReference    studentcollection = firestore.collection("users").document(userID)
+                                    CollectionReference studentcollection = firestore.collection("users").document(userID)
                                             .collection("All Files").document(PROF)
                                             .collection("Courses").document(title_course)
                                             .collection("Sections")
@@ -265,23 +263,22 @@ public class QuizMarks extends AppCompatActivity {
                                     studentcollection.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                         @Override
                                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                            for(QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots)
-                                            {
+                                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                                 QuizMarksClass items = documentSnapshot.toObject(QuizMarksClass.class);
 
                                                 studentItems1.add(items);
                                                 System.out.println(studentItems1);
-                                                DocumentReference documentReference =  firestore.collection("users").document(userID)
+                                                DocumentReference documentReference = firestore.collection("users").document(userID)
                                                         .collection("All Files").document(PROF)
                                                         .collection("Courses").document(title_course)
                                                         .collection("Sections")
                                                         .document(sec)
                                                         .collection("Quizes").document(q_n).collection("Students").document(Integer.toString(items.getId()));
                                                 System.out.println(items.getId());
-                                                Log.d("checkO",Integer.toString(items.getId()));
-                                                Log.d("checkO",Integer.toString(studentItems1.size()));
+                                                Log.d("checkO", Integer.toString(items.getId()));
+                                                Log.d("checkO", Integer.toString(studentItems1.size()));
 
-                                                for(int i=0;i<studentItems1.size();i++) {
+                                                for (int i = 0; i < studentItems1.size(); i++) {
                                                     Map<String, Object> user = new HashMap<>();
                                                     user.put("id", items.getId());
                                                     user.put("name", items.getName());
@@ -303,7 +300,7 @@ public class QuizMarks extends AppCompatActivity {
                                                     user1.put("name", items.getName());
                                                     user1.put("marks", 0);
                                                     user1.put("total", q);
-                                                    user1.put("quiz_name",q_n);
+                                                    user1.put("quiz_name", q_n);
                                                     documentReference1.set(user1);
                                                 }
 
@@ -313,8 +310,7 @@ public class QuizMarks extends AppCompatActivity {
                                         }
                                     });
 
-                                }
-                                else if(!(status.equals("Professional teacher / Home tutor"))){
+                                } else if (!(status.equals("Professional teacher / Home tutor"))) {
 
 
                                     DocumentReference documentReference = firestore.collection("users").document(userID)
@@ -323,17 +319,17 @@ public class QuizMarks extends AppCompatActivity {
 
                                     Map<String, Object> user = new HashMap<>();
                                     user.put("quiz", q_n);
-                                    user.put("quiz_date",q_d);
-                                    user.put("quiz_total_marks",q);
+                                    user.put("quiz_date", q_d);
+                                    user.put("quiz_total_marks", q);
                                     documentReference.set(user);
-                                    QuizNameClass quizNameClass = new QuizNameClass(q_n,q_d,q);
+                                    QuizNameClass quizNameClass = new QuizNameClass(q_n, q_d, q);
                                     quizMarksAdapter = new QuizMarksAdapter(getApplicationContext(), quizItems);
                                     quiz_recylerview.setAdapter(quizMarksAdapter);
                                     quizItems.add(quizNameClass);
                                     quizMarksAdapter.notifyDataSetChanged();
 
                                     dialog.dismiss();
-                                    CollectionReference    studentcollection = firestore.collection("users").document(userID)
+                                    CollectionReference studentcollection = firestore.collection("users").document(userID)
                                             .collection("Courses").document(title_course).collection("Sections")
                                             .document(sec)
                                             .collection("Students");
@@ -342,21 +338,20 @@ public class QuizMarks extends AppCompatActivity {
                                     studentcollection.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                                         @Override
                                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                            for(QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots)
-                                            {
+                                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                                 QuizMarksClass items = documentSnapshot.toObject(QuizMarksClass.class);
 
                                                 studentItems1.add(items);
                                                 System.out.println(studentItems1);
-                                                DocumentReference documentReference =  firestore.collection("users").document(userID)
+                                                DocumentReference documentReference = firestore.collection("users").document(userID)
                                                         .collection("Courses").document(title_course).collection("Sections")
                                                         .document(sec)
                                                         .collection("Quizes").document(q_n).collection("Students").document(Integer.toString(items.getId()));
                                                 System.out.println(items.getId());
-                                                Log.d("checkO",Integer.toString(items.getId()));
-                                                Log.d("checkO",Integer.toString(studentItems1.size()));
+                                                Log.d("checkO", Integer.toString(items.getId()));
+                                                Log.d("checkO", Integer.toString(studentItems1.size()));
 
-                                                for(int i=0;i<studentItems1.size();i++) {
+                                                for (int i = 0; i < studentItems1.size(); i++) {
                                                     Map<String, Object> user = new HashMap<>();
                                                     user.put("id", items.getId());
                                                     user.put("name", items.getName());
@@ -376,7 +371,7 @@ public class QuizMarks extends AppCompatActivity {
                                                     user1.put("name", items.getName());
                                                     user1.put("marks", 0);
                                                     user1.put("total", q);
-                                                    user1.put("quiz_name",q_n);
+                                                    user1.put("quiz_name", q_n);
                                                     documentReference1.set(user1);
                                                 }
 
@@ -390,17 +385,13 @@ public class QuizMarks extends AppCompatActivity {
                                 }
 
 
-
-
-
                             }
-                        }) .addOnFailureListener(new OnFailureListener() {
+                        }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
                             }
                         });
-
-
+                    }
 
 
 

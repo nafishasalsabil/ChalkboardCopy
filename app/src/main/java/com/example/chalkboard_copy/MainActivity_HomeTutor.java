@@ -3,6 +3,7 @@ package com.example.chalkboard_copy;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -108,6 +109,8 @@ public class MainActivity_HomeTutor extends AppCompatActivity implements Navigat
                     //  fields.append("\nEmail: ").append(doc.get("email"));
                     //   fields.append("\nPhone: ").append(doc.get("phone"));
                     username_tutor.setText(u);
+                    getSupportActionBar().setTitle(u+"'s Tutor Board");
+                    toolbar_features_hometutor.setTitleTextColor(Color.BLACK);
                     String link_image = chatUsers.getImageUrl();
                     if(!(link_image.equals("not_selected")))
                     {

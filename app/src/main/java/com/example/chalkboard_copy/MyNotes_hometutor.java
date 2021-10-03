@@ -2,6 +2,7 @@ package com.example.chalkboard_copy;
 
 import android.content.Intent;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -10,7 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-import android.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,10 +22,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -50,12 +56,42 @@ public class MyNotes_hometutor extends AppCompatActivity {
 Toolbar toolbar1;
     NotesHomeTutorAdapter notesAdapter;
     EditText search_notes;
+    public static String status = "";
+    public final String PROF="Professional Account";
+    public final String HT="Tutor Account";
+    CollectionReference collectionReference;
+    public static String note_title="";
+    public static String getNote_title() {
+        return note_title;
+    }
 
+    public static void setNote_title(String note_title) {
+        MyNotes.note_title = note_title;
+        System.out.println(note_title);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_notes_hometutor);
+        toolbar1 = findViewById(R.id.toolbar_notes);
+        setSupportActionBar(toolbar1);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("My Notes");
+        toolbar1.setTitleTextColor(Color.BLACK);
+        toolbar1.setNavigationIcon(R.drawable.ic_back);
+        getSupportActionBar().setElevation(0);
+        toolbar1.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1 = new Intent(getApplicationContext(), Materials_hometutor.class);
+                intent1.putExtra("title",title);
+                intent1.putExtra("section",sec);
+                intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent1);
 
+                finish();
+            }
+        });
         Intent intent  = getIntent();
         title  =intent.getStringExtra("title");
         sec = intent.getStringExtra("section");
@@ -69,11 +105,86 @@ Toolbar toolbar1;
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                searchNotes(s.toString().toLowerCase());
+              //  searchNotes(s.toString().toLowerCase());
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+                DocumentReference documentReference_for_status = firestore.collection("users").document(userID);
+
+                documentReference_for_status.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot doc = task.getResult();
+                        StringBuilder fields = new StringBuilder("");
+                        status = fields.append(doc.get("choice")).toString();
+
+                        if(status.equals("Professional teacher / Home tutor")){
+
+                            collectionReference = firestore.collection("users").document(userID)
+                                    .collection("All Files").document(HT)
+                                    .collection("Courses").document(title)
+                                    .collection("Batches").document(sec).collection("MyNotes");
+
+                            if(s.toString().isEmpty()){
+
+                                Query query = collectionReference;
+                                FirestoreRecyclerOptions<NotesClass> options = new FirestoreRecyclerOptions.Builder<NotesClass>()
+                                        .setQuery(query, NotesClass.class)
+                                        .build();
+                                notesAdapter.updateOptions(options);
+                                notesAdapter.startListening();
+
+                            }
+
+                            else{
+
+
+                                Query query = collectionReference.whereEqualTo("noteTitle",s.toString());
+                                FirestoreRecyclerOptions<NotesClass> options = new FirestoreRecyclerOptions.Builder<NotesClass>()
+                                        .setQuery(query, NotesClass.class)
+                                        .build();
+                                notesAdapter.updateOptions(options);
+                                notesAdapter.startListening();
+
+
+                            }
+                        }
+                        else if(!(status.equals("Professional teacher / Home tutor"))){
+                            collectionReference =  firestore.collection("users").document(userID)
+                                    .collection("Courses").document(title)
+                                    .collection("Batches").document(sec).collection("MyNotes");
+
+                            if(s.toString().isEmpty()){
+                                Query query = collectionReference;
+                                FirestoreRecyclerOptions<NotesClass> options = new FirestoreRecyclerOptions.Builder<NotesClass>()
+                                        .setQuery(query, NotesClass.class)
+                                        .build();
+                                notesAdapter.updateOptions(options);
+                                notesAdapter.startListening();
+                            }
+                            else{
+                                Query query = collectionReference.whereEqualTo("noteTitle",s.toString());
+                                FirestoreRecyclerOptions<NotesClass> options = new FirestoreRecyclerOptions.Builder<NotesClass>()
+                                        .setQuery(query, NotesClass.class)
+                                        .build();
+                                notesAdapter.updateOptions(options);
+                                notesAdapter.startListening();
+
+                            }
+
+
+                        }
+
+
+
+
+                    }
+                }) .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                    }
+                });
 
             }
         });
@@ -83,17 +194,105 @@ Toolbar toolbar1;
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(NUM_COLUMN, LinearLayoutManager.VERTICAL);
         notes_recyclerview.setLayoutManager(layoutManager);
 
-        CollectionReference collectionReference =  firestore.collection("users").document(userID)
-                .collection("Courses").document(title)
-                .collection("Batches").document(sec).collection("MyNotes");
-        Query query = collectionReference;
-        FirestoreRecyclerOptions<NotesClass> options = new FirestoreRecyclerOptions.Builder<NotesClass>()
-                .setQuery(query, NotesClass.class)
-                .build();
-        notesAdapter = new NotesHomeTutorAdapter(options);
-        notes_recyclerview.setAdapter(notesAdapter);
-        // classitems.addAll(options);
-        notesAdapter.notifyDataSetChanged();
+
+
+
+
+
+
+        DocumentReference documentReference_for_status = firestore.collection("users").document(userID);
+
+        documentReference_for_status.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot doc = task.getResult();
+                StringBuilder fields = new StringBuilder("");
+                status = fields.append(doc.get("choice")).toString();
+
+                if(status.equals("Professional teacher / Home tutor")){
+                    collectionReference =  firestore.collection("users").document(userID)
+                            .collection("All Files").document(HT)
+                            .collection("Courses").document(title)
+                            .collection("Batches").document(sec).collection("MyNotes");
+
+                    Query query = collectionReference;
+                    FirestoreRecyclerOptions<NotesClass> options = new FirestoreRecyclerOptions.Builder<NotesClass>()
+                            .setQuery(query, NotesClass.class)
+                            .build();
+                    notesAdapter = new NotesHomeTutorAdapter(options);
+
+                    notesAdapter.startListening();
+                    notesAdapter.setTitle(title);
+
+                    notesAdapter.setSection(sec);
+
+
+                    notes_recyclerview.setAdapter(notesAdapter);
+
+                    CollectionReference documentReference =  firestore.collection("users").document(userID)
+                            .collection("All Files").document(HT).collection("Courses")
+                            .document(title).collection("Batches").document(sec).collection("MyNotes");
+                    documentReference.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            List<NotesClass> documentData = queryDocumentSnapshots.toObjects(NotesClass.class);
+
+                            notesClassList.addAll(documentData);
+
+                        }
+                    });
+
+                    notesAdapter.notifyDataSetChanged();
+
+
+
+                }
+                else if(!(status.equals("Professional teacher / Home tutor"))){
+                    collectionReference =  firestore.collection("users").document(userID)
+                            .collection("Courses").document(title)
+                            .collection("Batches").document(sec).collection("MyNotes");
+
+                    Query query = collectionReference;
+                    FirestoreRecyclerOptions<NotesClass> options = new FirestoreRecyclerOptions.Builder<NotesClass>()
+                            .setQuery(query, NotesClass.class)
+                            .build();
+                    notesAdapter = new NotesHomeTutorAdapter(options);
+                    notesAdapter.startListening();
+                    notes_recyclerview.setAdapter(notesAdapter);
+
+
+                    DocumentReference documentReference = firestore.collection("users").document(userID)
+                            .collection("Courses").document(title)
+                            .collection("Batches").document(sec).collection("MyNotes").document(getNote_title());
+                    documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            NotesClass notesClass = documentSnapshot.toObject(NotesClass.class);
+
+                            notesClassList.add(new NotesClass( notesClass.getNoteTitle(),notesClass.getSubtitle(),notesClass.getDate(),notesClass.getMynote(),notesClass.getUrl()));
+
+
+
+                        }
+                    });
+                    notesAdapter.notifyDataSetChanged();
+
+
+                }
+
+
+
+
+            }
+        }) .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+            }
+        });
+
+
+
+
 
 
         ImageView imageAddNoteMain = findViewById(R.id.addnotes_hometutor);
@@ -156,12 +355,107 @@ Toolbar toolbar1;
     @Override
     public void onStart() {
         super.onStart();
-        notesAdapter.startListening();
+
     }
     @Override
     public void onStop() {
         super.onStop();
         notesAdapter.stopListening();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        DocumentReference documentReference_for_status = firestore.collection("users").document(userID);
+
+        documentReference_for_status.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot doc = task.getResult();
+                StringBuilder fields = new StringBuilder("");
+                status = fields.append(doc.get("choice")).toString();
+
+                if(status.equals("Professional teacher / Home tutor")){
+
+                    collectionReference = firestore.collection("users").document(userID)
+                            .collection("All Files").document(HT)
+                            .collection("Courses").document(title)
+                            .collection("Batches").document(sec).collection("MyNotes");
+
+                    Query query = collectionReference;
+                    FirestoreRecyclerOptions<NotesClass> options = new FirestoreRecyclerOptions.Builder<NotesClass>()
+                            .setQuery(query, NotesClass.class)
+                            .build();
+                    notesAdapter = new NotesHomeTutorAdapter(options);
+                    notesAdapter.startListening();
+                    notesAdapter.setTitle(title);
+
+                    notesAdapter.setSection(sec);
+
+
+                    notes_recyclerview.setAdapter(notesAdapter);
+
+                    CollectionReference documentReference =  firestore.collection("users").document(userID)
+                            .collection("All Files").document(HT).collection("Courses")
+                            .document(title).collection("Batches").document(sec).collection("MyNotes");
+                    documentReference.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            List<NotesClass> documentData = queryDocumentSnapshots.toObjects(NotesClass.class);
+
+                            notesClassList.addAll(documentData);
+
+                        }
+                    });
+
+                    notesAdapter.notifyDataSetChanged();
+
+
+
+                }
+                else if(!(status.equals("Professional teacher / Home tutor"))){
+                    collectionReference =  firestore.collection("users").document(userID)
+                            .collection("Courses").document(title)
+                            .collection("Batches").document(sec).collection("MyNotes");
+                    Query query = collectionReference;
+                    FirestoreRecyclerOptions<NotesClass> options = new FirestoreRecyclerOptions.Builder<NotesClass>()
+                            .setQuery(query, NotesClass.class)
+                            .build();
+                    notesAdapter = new NotesHomeTutorAdapter(options);
+                    notesAdapter.startListening();
+                    notes_recyclerview.setAdapter(notesAdapter);
+                    // classitems.addAll(options);
+
+                    DocumentReference documentReference = firestore.collection("users").document(userID)
+                            .collection("Courses").document(title)
+                            .collection("Batches").document(sec).collection("MyNotes").document(getNote_title());
+                    documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            NotesClass notesClass = documentSnapshot.toObject(NotesClass.class);
+
+                            notesClassList.add(new NotesClass( notesClass.getNoteTitle(),notesClass.getSubtitle(),notesClass.getDate(),notesClass.getMynote(),notesClass.getUrl()));
+
+
+
+                        }
+                    });
+                    notesAdapter.notifyDataSetChanged();
+
+
+                }
+
+
+
+
+            }
+        }) .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+            }
+        });
+
+
     }
 
     List<String> archive = new ArrayList<>();

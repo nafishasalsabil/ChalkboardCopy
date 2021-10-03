@@ -1,6 +1,7 @@
 package com.example.chalkboard_copy;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 
@@ -51,6 +52,8 @@ public class All_Students_All_Attendance_Record extends AppCompatActivity {
         setSupportActionBar(asar_toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         asar_toolbar.setNavigationIcon(R.drawable.ic_back);
+        asar_toolbar.setTitle("Records");
+        asar_toolbar.setTitleTextColor(Color.BLACK);
         recyclerView = (RecyclerView)findViewById(R.id.all_attendance_record_recyclerview);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getApplicationContext());
